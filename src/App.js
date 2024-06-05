@@ -1,17 +1,14 @@
 import React, { useState } from 'react';
 import ShiftTable from './components/ShiftTable';
 import { schoolVakantiesKalenderjaar, feestdagen } from './feestdagenVakanties';
+import testData from './testData/wachtlijstData';
 
 const App = () => {
   const [month, setMonth] = useState(new Date().getMonth() + 1); // Huidige maand
   const [year, setYear] = useState(new Date().getFullYear()); // Huidig jaar
   const [person, setPerson] = useState('');
-  const [shifts, setShifts] = useState([
-    { date: '2024-06-01', morning: 'John', evening: 'Jane', night: 'Doe' },
-    { date: '2024-06-02', morning: 'Alice', evening: 'Bob', night: 'Charlie' },
-    // Voeg meer shiftdata toe zoals nodig
-  ]);
-  const [shiftTypes] = useState(['morning', 'evening', 'night']);
+  const [shifts, setShifts] = useState(testData);
+  const [shiftTypes] = useState(["Dag1", "Dag2","Nacht1","Nacht2","Arts3"]);
 
   const handleMonthChange = (event) => {
     setMonth(parseInt(event.target.value));
