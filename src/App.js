@@ -1,15 +1,35 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import ShiftTable from './components/ShiftTable';
 import { schoolVakantiesKalenderjaar, feestdagen } from './feestdagenVakanties';
+import axios from 'axios';
 import testData from './testData/wachtlijstData';
 
 const App = () => {
   const [month, setMonth] = useState(new Date().getMonth() + 1); // Huidige maand
-  const [year, setYear] = useState(new Date().getFullYear()); // Huidig jaar
+  const [year, setYear] = useState(new Date().getFullYear()-1); // Huidig jaar
   const [person, setPerson] = useState('');
-  const [shifts, setShifts] = useState(testData);
-  const [shiftTypes] = useState(["Dag1", "Dag2","Nacht1","Nacht2","Arts3"]);
+  const [shifts, setShifts] = useState([]);
+  const [shiftTypes] = useState(["Dag", "Nacht","Arts3"]);
 
+  useEffect(() => {
+    async function fetchAndSetShifts() {
+      const data = await fetchShifts(year, month);
+      setShifts(data);
+    }
+
+    fetchAndSetShifts();
+  }, [year, month]);
+
+  async function fetchShifts(year, month) {
+    // try {
+    //   const response = await axios.get(`http://localhost:3001/activities/${year}/${month}`);
+    //   return response.data;
+    // } catch (error) {
+    //   console.error('Er is een fout opgetreden!', error);
+    //   return []; // Return an empty array in case of an error
+    // }
+    return testData;
+  }
   const handleMonthChange = (event) => {
     setMonth(parseInt(event.target.value));
   };
@@ -76,7 +96,7 @@ const App = () => {
           month={month}
           year={year}
           shifts={shifts}
-          person={person}
+          lastName={person}
           holidays={holidays}
           vacations={vacations}
           locale={locale}

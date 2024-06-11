@@ -9,6 +9,7 @@ const sequelize = require('./config/database');
 const sequelizeBesco = require('./config/besco');
 const { Op } = require('sequelize');
 require('dotenv').config();
+const cors = require('cors');
 
 let bescoModels = initBescoModels(sequelizeBesco);
 let models = initModels(sequelize);
@@ -19,6 +20,7 @@ const port = 3001;
 //   };
 
 // app.use(cors(corsOptions));
+app.use(cors());
 app.use(express.json());
 
 app.use(
@@ -244,25 +246,46 @@ app.delete('/doctors/:id', async (req, res) => {
 
 // ACTIVITIES
 
-app.get('/activities', async (req, res) => {
+app.get('/activities/:year/:month', async (req, res) => {
+  const { year, month } = req.params;
+
   try {
-    const startOfMonth = new Date(
-      new Date().getFullYear(),
-      new Date().getMonth(),
-      1
-    );
-    const endOfMonth = new Date(
-      new Date().getFullYear(),
-      new Date().getMonth() + 1,
-      0
-    );
+    const startDate = new Date(year, month - 1, 1);
+    const endDate = new Date(year, month, 0);
+
     const activities = await models.activities.findAll({
       where: {
         begin_DT: {
-          [Op.between]: [startOfMonth, endOfMonth],
+          [Op.gte]: startDate,
         },
+        end_DT: {
+          [Op.lte]: endDate,
+        },
+        status: 'OK',
       },
+      include: [
+        {
+          model: models.persons,
+          attributes: ['first_name', 'last_name'],
+        },
+        {
+          model: models.activity_types,
+          attributes: ['name'],
+          where: {
+            name: {
+              [Op.ne]: 'Verlof',
+            },
+          },
+        },
+      ],
+      order: [
+        ['begin_DT', 'ASC'],
+        [models.activity_types, 'name', 'ASC'],
+        [models.persons, 'last_name', 'ASC'],
+        [models.persons, 'first_name', 'ASC'],
+      ],
     });
+
     res.json(activities);
   } catch (error) {
     console.error(error);

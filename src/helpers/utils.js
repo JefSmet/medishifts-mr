@@ -1,4 +1,4 @@
-import { toFormattedString } from './helpers/dateTimeHelpers';
+import { toDateOnlyString } from './dateTimeHelpers';
 
 export const generateMonthDays = (month, year, locale) => {
   const daysInMonth = new Date(year, month, 0).getDate();
@@ -16,7 +16,7 @@ export const generateMonthDays = (month, year, locale) => {
     });
     const dateRecord = {
       caption: `${dayStringNumeric} ${dayStringWeekDay}`,
-      isoDate: date.toIsoDateString(),
+      isoDate: date.toDateOnlyString(),
       date: date,
     };
     daysArray.push(dateRecord);

@@ -1,11 +1,11 @@
 import React from 'react';
-import { generateMonthDays } from '../utils';
+import { generateMonthDays } from '../helpers/utils';
 
 function ShiftTable({
   month,
   year,
   shifts,
-  person,
+  lastName,
   holidays,
   vacations,
   locale,
@@ -13,10 +13,31 @@ function ShiftTable({
 }) {
   const allDays = generateMonthDays(month, year, locale);
 
-  const shiftsMap = shifts.reduce(function (acc, shiftData) {
-    acc[shiftData.Datum.split('T')[0]] = shiftData;
-    return acc;
-  }, {});
+  if (!shifts || shifts.length === 0) return;
+
+  function transformActivities(activities) {
+    return activities.reduce((acc, activity) => {
+      const { begin_DT, activity_type, person } = activity;
+      const beginDate = new Date(begin_DT).toISOString().split('T')[0];
+      const activityTypeName = activity_type.name;
+      const personName = {
+        last_name: person.last_name,
+        first_name: person.first_name,
+      };
+
+      if (!acc[beginDate]) {
+        acc[beginDate] = {};
+      }
+
+      if (!acc[beginDate][activityTypeName]) {
+        acc[beginDate][activityTypeName] = [];
+      }
+
+      acc[beginDate][activityTypeName].push(personName);
+
+      return acc;
+    }, {});
+  }
 
   function isHoliday(date) {
     return holidays.some(function (holiday) {
@@ -37,18 +58,21 @@ function ShiftTable({
     if (isVacation(dateRecord.date)) return 'bg-green-200'; // Vacation
     return '';
   }
+  function renderPersonsForDate(personsForDate) {
+    if (!personsForDate || !Array.isArray(personsForDate)) return null;
+    return personsForDate.map(function (person, idx) {
+      const style = person.last_name.toLowerCase() === lastName.toLowerCase() ? 'bg-yellow-200' : '';
+      return <div className={`py-2 px-4 ${style}`} key={idx}>{person.last_name}</div>;
+    });
+  }
 
   function renderShiftTypes(dateRecord) {
-    const shiftForDay = shiftsMap[dateRecord.isoDate] || {};
+    const shiftsMap = transformActivities(shifts);
+    const shiftForDay = shiftsMap[dateRecord.isoDate] || [];
     return shiftTypes.map(function (shiftType, idx) {
       return (
-        <td
-          key={idx}
-          className={`py-2 px-4 border ${
-            shiftForDay[shiftType] ? shiftForDay[shiftType].toUpperCase() === person.toUpperCase() ? 'bg-yellow-200' : '' : ''
-          } w-fit`}
-        >
-          {shiftForDay[shiftType] || ''}
+        <td key={idx} className={`py-2 px-4 border w-fit`}>
+          {renderPersonsForDate(shiftForDay[shiftType])}
         </td>
       );
     });
