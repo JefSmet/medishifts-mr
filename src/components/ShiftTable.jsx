@@ -1,5 +1,5 @@
 import React from 'react';
-import { generateMonthDays } from '../helpers/utils';
+import { generateMonthDays,toDateOnlyString } from '../utils/dateTimeUtils';
 
 function ShiftTable({
   month,
@@ -18,7 +18,7 @@ function ShiftTable({
   function transformActivities(activities) {
     return activities.reduce((acc, activity) => {
       const { begin_DT, activity_type, person } = activity;
-      const beginDate = new Date(begin_DT).toISOString().split('T')[0];
+      const beginDate = toDateOnlyString(begin_DT);
       const activityTypeName = activity_type.name;
       const personName = {
         last_name: person.last_name,
@@ -61,8 +61,14 @@ function ShiftTable({
   function renderPersonsForDate(personsForDate) {
     if (!personsForDate || !Array.isArray(personsForDate)) return null;
     return personsForDate.map(function (person, idx) {
-      const style = person.last_name.toLowerCase() === lastName.toLowerCase() ? 'bg-yellow-200' : '';
-      return <div className={`py-2 px-4 ${style}`} key={idx}>{person.last_name}</div>;
+      const background = person.last_name.toLowerCase() === lastName.toLowerCase() ? 'bg-yellow-200' : 'bg-gray-500';
+      const textcolor = person.last_name.toLowerCase() === lastName.toLowerCase() ? 'text-gray-500' : 'text-white';
+      // return <div className={`py-2 px-4 ${style}`} key={idx}>{person.last_name}</div>;
+      return (
+        <span className={`inline-flex h-8 w-8 mr-2 items-center justify-center rounded-full ${background}`} key={idx}>
+          <span className={`text-xs font-medium leading-none ${textcolor}`}>{person.first_name.charAt(0)}{person.last_name.charAt(0)}</span>
+        </span>
+      );
     });
   }
 

@@ -30,7 +30,7 @@ function herfstVakantie(jaar) {
   return {
     startDate: date,
     endDate: new Date(date.getTime() + 6 * 24 * 60 * 60 * 1000),
-    info: 'Herfstvakantie',
+    info: "Herfstvakantie",
   };
 }
 
@@ -38,7 +38,7 @@ function herfstVakantie(jaar) {
 function kerstVakantie(jaar) {
   let date = new Date(jaar, 11, 25); // 25 december
   const dayOfWeek = date.getDay();
-  if (dayOfWeek > 5) {
+  if (dayOfWeek === 6 || dayOfWeek === 0) {
     // zaterdag of zondag
     date.setDate(date.getDate() + (8 - dayOfWeek));
   } else {
@@ -47,7 +47,7 @@ function kerstVakantie(jaar) {
   return {
     startDate: date,
     endDate: new Date(date.getTime() + 13 * 24 * 60 * 60 * 1000),
-    info: 'Kerstvakantie',
+    info: "Kerstvakantie",
   };
 }
 
@@ -60,7 +60,7 @@ function krokusVakantie(jaar) {
   return {
     startDate: start,
     endDate: new Date(start.getTime() + 6 * 24 * 60 * 60 * 1000),
-    info: 'Krokusvakantie',
+    info: "Krokusvakantie",
   };
 }
 
@@ -85,7 +85,7 @@ function paasVakantie(jaar) {
   return {
     startDate: start,
     endDate: new Date(start.getTime() + 13 * 24 * 60 * 60 * 1000),
-    info: 'Paasvakantie',
+    info: "Paasvakantie",
   };
 }
 
@@ -98,7 +98,7 @@ function hemelvaartVakantie(jaar) {
   return {
     startDate: start,
     endDate: new Date(start.getTime() + 1 * 24 * 60 * 60 * 1000),
-    info: 'Hemelvaart Schoolvakantie',
+    info: "Hemelvaart Schoolvakantie",
   };
 }
 
@@ -106,7 +106,7 @@ function hemelvaartVakantie(jaar) {
 function zomerVakantie(jaar) {
   const start = new Date(jaar, 6, 1); // 1 juli
   const end = new Date(jaar, 7, 31); // 31 augustus
-  return { startDate: start, endDate: end, info: 'Zomervakantie' };
+  return { startDate: start, endDate: end, info: "Zomervakantie" };
 }
 
 // Functie voor het berekenen van de Kerstvakantie voor het tweede deel van het vorige jaar
@@ -115,7 +115,7 @@ function kerstVakantieVorigeJaar(jaar) {
   return {
     startDate: start,
     endDate: new Date(start.getTime() + 13 * 24 * 60 * 60 * 1000),
-    info: 'Kerstvakantie',
+    info: "Kerstvakantie",
   };
 }
 
@@ -166,16 +166,16 @@ function feestdagen(jaar) {
   );
 
   return [
-    { datum: new Date(jaar, 0, 1), info: 'Nieuwjaar' }, // 1 januari
-    { datum: paasmaandag, info: 'Paasmaandag' }, // Paasmaandag
-    { datum: new Date(jaar, 4, 1), info: 'Dag van de Arbeid' }, // 1 mei
-    { datum: hemelvaart, info: 'O.L.H. Hemelvaart' }, // Hemelvaart
-    { datum: pinkstermaandag, info: 'Pinkstermaandag' }, // Pinkstermaandag
-    { datum: new Date(jaar, 6, 21), info: 'Nationale Feestdag' }, // 21 juli
-    { datum: new Date(jaar, 7, 15), info: 'O.L.V. Hemelvaart' }, // 15 augustus
-    { datum: new Date(jaar, 10, 1), info: 'Allerheiligen' }, // 1 november
-    { datum: new Date(jaar, 10, 11), info: 'Wapenstilstand' }, // 11 november
-    { datum: new Date(jaar, 11, 25), info: 'Kerstmis' }, // 25 december
+    { datum: new Date(jaar, 0, 1), info: "Nieuwjaar" }, // 1 januari
+    { datum: paasmaandag, info: "Paasmaandag" }, // Paasmaandag
+    { datum: new Date(jaar, 4, 1), info: "Dag van de Arbeid" }, // 1 mei
+    { datum: hemelvaart, info: "O.L.H. Hemelvaart" }, // Hemelvaart
+    { datum: pinkstermaandag, info: "Pinkstermaandag" }, // Pinkstermaandag
+    { datum: new Date(jaar, 6, 21), info: "Nationale Feestdag" }, // 21 juli
+    { datum: new Date(jaar, 7, 15), info: "O.L.V. Hemelvaart" }, // 15 augustus
+    { datum: new Date(jaar, 10, 1), info: "Allerheiligen" }, // 1 november
+    { datum: new Date(jaar, 10, 11), info: "Wapenstilstand" }, // 11 november
+    { datum: new Date(jaar, 11, 25), info: "Kerstmis" }, // 25 december
   ];
 }
 

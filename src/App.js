@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import ShiftTable from './components/ShiftTable';
-import { schoolVakantiesKalenderjaar, feestdagen } from './feestdagenVakanties';
-import axios from 'axios';
+import { schoolVakantiesKalenderjaar, feestdagen } from './utils/feestdagenVakanties';
 import testData from './testData/wachtlijstData';
 
 const App = () => {
