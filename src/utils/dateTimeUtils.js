@@ -99,10 +99,10 @@ function calculateMonthGridDetails(month, year, firstDayOfWeek = 1) {
   let numRows = Math.ceil(totalDays / 7);
 
   // Check if an extra row needs to be added
-  if (startColumn === 0 || endColumn === 6) {
+  if (startColumn === 0) {
     numRows++;
   }
-  if (startColumn === 0 && endColumn === 6) {
+  if (endColumn === 6) {
     numRows++;
   }
 
