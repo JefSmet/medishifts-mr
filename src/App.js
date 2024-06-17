@@ -1,14 +1,17 @@
 import React, { useEffect, useState } from 'react';
 import ShiftTable from './components/ShiftTable';
-import { schoolVakantiesKalenderjaar, feestdagen } from './utils/feestdagenVakanties';
+import {
+  schoolHolidaysCalendarYear,
+  holidaysBelgium,
+} from './utils/HolidaysBelgium';
 import testData from './testData/wachtlijstData';
 
 const App = () => {
   const [month, setMonth] = useState(new Date().getMonth() + 1); // Huidige maand
-  const [year, setYear] = useState(new Date().getFullYear()-1); // Huidig jaar
+  const [year, setYear] = useState(new Date().getFullYear() - 1); // Huidig jaar
   const [person, setPerson] = useState('');
   const [shifts, setShifts] = useState([]);
-  const [shiftTypes] = useState(["Dag", "Nacht","Arts3"]);
+  const [shiftTypes] = useState(['Dag', 'Nacht', 'Arts3']);
 
   useEffect(() => {
     async function fetchAndSetShifts() {
@@ -41,8 +44,8 @@ const App = () => {
     setPerson(event.target.value);
   };
 
-  const holidays = feestdagen(year);
-  const vacations = schoolVakantiesKalenderjaar(year);
+  const holidays = holidaysBelgium(year);
+  const vacations = schoolHolidaysCalendarYear(year);
 
   const locale = navigator.language; // Haal de systemlocale op
   const monthNames = Array.from({ length: 12 }, (e, i) =>

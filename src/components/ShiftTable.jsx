@@ -15,6 +15,12 @@ function ShiftTable({
 
   if (!shifts || shifts.length === 0) return;
 
+  /**
+   * Reduces activities to a structured object with nested arrays.
+   *
+   * @param {Array} activities - The list of activities to transform.
+   * @return {Object} The transformed activities structured by date and type.
+   */
   function transformActivities(activities) {
     return activities.reduce((acc, activity) => {
       const { begin_DT, activity_type, person } = activity;
