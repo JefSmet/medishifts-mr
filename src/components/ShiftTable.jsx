@@ -1,5 +1,5 @@
 import React from 'react';
-import { generateMonthDays,toDateOnlyString } from '../utils/dateTimeUtils';
+import { generateMonthDays, toDateOnlyString } from '../utils/dateTimeUtils';
 
 function ShiftTable({
   month,
@@ -22,7 +22,7 @@ function ShiftTable({
    * @return {Object} The transformed activities structured by date and type.
    */
   function transformActivities(activities) {
-    return activities.reduce((acc, activity) => {
+    return activities.reduce((accumulator, activity) => {
       const { begin_DT, activity_type, person } = activity;
       const beginDate = toDateOnlyString(begin_DT);
       const activityTypeName = activity_type.name;
@@ -31,17 +31,29 @@ function ShiftTable({
         first_name: person.first_name,
       };
 
-      if (!acc[beginDate]) {
-        acc[beginDate] = {};
+      if (!accumulator[beginDate]) {
+        accumulator[beginDate] = {};
       }
 
-      if (!acc[beginDate][activityTypeName]) {
-        acc[beginDate][activityTypeName] = [];
+      if (!accumulator[beginDate][activityTypeName]) {
+        accumulator[beginDate][activityTypeName] = [];
       }
 
-      acc[beginDate][activityTypeName].push(personName);
-
-      return acc;
+      accumulator[beginDate][activityTypeName].push(personName);
+      accumulator[beginDate][activityTypeName].sort((a, b) => {
+        if (a.first_name < b.first_name) {
+          return -1;
+        } else if (a.first_name > b.first_name) {
+          return 1;
+        } else {
+          if (a.last_name < b.last_name) {
+            return -1;
+          } else {
+            return 1;
+          }
+        }
+      });
+      return accumulator;
     }, {});
   }
 
@@ -67,12 +79,24 @@ function ShiftTable({
   function renderPersonsForDate(personsForDate) {
     if (!personsForDate || !Array.isArray(personsForDate)) return null;
     return personsForDate.map(function (person, idx) {
-      const background = person.last_name.toLowerCase() === lastName.toLowerCase() ? 'bg-yellow-200' : 'bg-gray-500';
-      const textcolor = person.last_name.toLowerCase() === lastName.toLowerCase() ? 'text-gray-500' : 'text-white';
+      const background =
+        person.last_name.toLowerCase() === lastName.toLowerCase()
+          ? 'bg-yellow-200'
+          : 'bg-gray-500';
+      const textcolor =
+        person.last_name.toLowerCase() === lastName.toLowerCase()
+          ? 'text-gray-500'
+          : 'text-white';
       // return <div className={`py-2 px-4 ${style}`} key={idx}>{person.last_name}</div>;
       return (
-        <span className={`inline-flex h-8 w-8 mr-2 items-center justify-center rounded-full ${background}`} key={idx}>
-          <span className={`text-xs font-medium leading-none ${textcolor}`}>{person.first_name.charAt(0)}{person.last_name.charAt(0)}</span>
+        <span
+          className={`inline-flex h-8 w-8 mr-2 items-center justify-center rounded-full ${background}`}
+          key={idx}
+        >
+          <span className={`text-xs font-medium leading-none ${textcolor}`}>
+            {person.first_name.charAt(0)}
+            {person.last_name.charAt(0)}
+          </span>
         </span>
       );
     });

@@ -1,112 +1,290 @@
-import React, { useEffect, useState } from 'react';
-import ShiftTable from './components/ShiftTable';
+import React, { Fragment, useState } from 'react';
 import {
-  schoolHolidaysCalendarYear,
-  holidaysBelgium,
-} from './utils/HolidaysBelgium';
-import testData from './testData/wachtlijstData';
+  BrowserRouter as Router,
+  Routes,
+  Route,
+  NavLink,
+} from 'react-router-dom';
+import {
+  Dialog,
+  DialogPanel,
+  Transition,
+  TransitionChild,
+} from '@headlessui/react';
+import {
+  Bars3Icon,
+  CalendarIcon,
+  ChartPieIcon,
+  DocumentDuplicateIcon,
+  FolderIcon,
+  HomeIcon,
+  UsersIcon,
+  XMarkIcon,
+} from '@heroicons/react/24/outline';
 
-const App = () => {
-  const [month, setMonth] = useState(new Date().getMonth() + 1); // Huidige maand
-  const [year, setYear] = useState(new Date().getFullYear() - 1); // Huidig jaar
-  const [person, setPerson] = useState('');
-  const [shifts, setShifts] = useState([]);
-  const [shiftTypes] = useState(['Dag', 'Nacht', 'Arts3']);
+import LoginForm from './components/LoginForm';
+import Wachtlijst from './pages/Wachtlijst';
+const navigation = [
+  { name: 'Login', href: '/login', icon: HomeIcon, current: false },
+  { name: 'Dashboard', href: '/', icon: HomeIcon, current: false },
+  {name:'Wachtlijst', href: '/wachtlijst', icon: CalendarIcon, current: true},
+];
 
-  useEffect(() => {
-    async function fetchAndSetShifts() {
-      const data = await fetchShifts(year, month);
-      setShifts(data);
-    }
+const teams = [
+  { id: 1, name: 'Heroicons', href: '#', initial: 'H', current: false },
+  { id: 2, name: 'Tailwind Labs', href: '#', initial: 'T', current: false },
+  { id: 3, name: 'Workcation', href: '#', initial: 'W', current: false },
+];
 
-    fetchAndSetShifts();
-  }, [year, month]);
+function classNames(...classes) {
+  return classes.filter(Boolean).join(' ');
+}
 
-  async function fetchShifts(year, month) {
-    // try {
-    //   const response = await axios.get(`http://localhost:3001/activities/${year}/${month}`);
-    //   return response.data;
-    // } catch (error) {
-    //   console.error('Er is een fout opgetreden!', error);
-    //   return []; // Return an empty array in case of an error
-    // }
-    return testData;
-  }
-  const handleMonthChange = (event) => {
-    setMonth(parseInt(event.target.value));
-  };
-
-  const handleYearChange = (event) => {
-    setYear(parseInt(event.target.value));
-  };
-
-  const handlePersonChange = (event) => {
-    setPerson(event.target.value);
-  };
-
-  const holidays = holidaysBelgium(year);
-  const vacations = schoolHolidaysCalendarYear(year);
-
-  const locale = navigator.language; // Haal de systemlocale op
-  const monthNames = Array.from({ length: 12 }, (e, i) =>
-    new Date(0, i).toLocaleString(locale, { month: 'long' })
-  );
+export default function App() {
+  const [sidebarOpen, setSidebarOpen] = useState(false);
 
   return (
-    <div className='App'>
-      <header className='bg-blue-500 text-white p-4 text-center'>
-        <h1 className='text-3xl'>Shift Schedule</h1>
-      </header>
-      <main className='p-4'>
-        <div className='mb-4 flex items-center'>
-          <label className='mr-2'>Month:</label>
-          <select
-            value={month}
-            onChange={handleMonthChange}
-            className='mr-4 p-2 border'
-          >
-            {monthNames.map((name, index) => (
-              <option key={index} value={index + 1}>
-                {name}
-              </option>
-            ))}
-          </select>
+    <Router>
+      <Fragment>
+        <div>
+          <Transition show={sidebarOpen}>
+            <Dialog
+              className='relative z-50 lg:hidden'
+              onClose={setSidebarOpen}
+            >
+              <TransitionChild
+                enter='transition-opacity ease-linear duration-300'
+                enterFrom='opacity-0'
+                enterTo='opacity-100'
+                leave='transition-opacity ease-linear duration-300'
+                leaveFrom='opacity-100'
+                leaveTo='opacity-0'
+              >
+                <div className='fixed inset-0 bg-gray-900/80' />
+              </TransitionChild>
 
-          <label className='mr-2'>Year:</label>
-          <select
-            value={year}
-            onChange={handleYearChange}
-            className='mr-4 p-2 border'
-          >
-            {[2022, 2023, 2024, 2025].map((y) => (
-              <option key={y} value={y}>
-                {y}
-              </option>
-            ))}
-          </select>
+              <div className='fixed inset-0 flex'>
+                <TransitionChild
+                  enter='transition ease-in-out duration-300 transform'
+                  enterFrom='-translate-x-full'
+                  enterTo='translate-x-0'
+                  leave='transition ease-in-out duration-300 transform'
+                  leaveFrom='translate-x-0'
+                  leaveTo='-translate-x-full'
+                >
+                  <DialogPanel className='relative mr-16 flex w-full max-w-xs flex-1'>
+                    <TransitionChild
+                      enter='ease-in-out duration-300'
+                      enterFrom='opacity-0'
+                      enterTo='opacity-100'
+                      leave='ease-in-out duration-300'
+                      leaveFrom='opacity-100'
+                      leaveTo='opacity-0'
+                    >
+                      <div className='absolute left-full top-0 flex w-16 justify-center pt-5'>
+                        <button
+                          type='button'
+                          className='-m-2.5 p-2.5'
+                          onClick={() => setSidebarOpen(false)}
+                        >
+                          <span className='sr-only'>Close sidebar</span>
+                          <XMarkIcon
+                            className='h-6 w-6 text-white'
+                            aria-hidden='true'
+                          />
+                        </button>
+                      </div>
+                    </TransitionChild>
+                    <div className='flex grow flex-col gap-y-5 overflow-y-auto bg-gray-900 px-6 pb-2 ring-1 ring-white/10'>
+                      <div className='flex h-16 shrink-0 items-center'>
+                        <img
+                          className='h-8 w-auto'
+                          src='https://tailwindui.com/img/logos/mark.svg?color=indigo&shade=500'
+                          alt='Your Company'
+                        />
+                      </div>
+                      <nav className='flex flex-1 flex-col'>
+                        <ul
+                          role='list'
+                          className='flex flex-1 flex-col gap-y-7'
+                        >
+                          <li>
+                            <ul role='list' className='-mx-2 space-y-1'>
+                              {navigation.map((item) => (
+                                <li key={item.name}>
+                                  <NavLink
+                                    to={item.href}
+                                    className={({ isActive }) =>
+                                      classNames(
+                                        isActive
+                                          ? 'bg-gray-800 text-white'
+                                          : 'text-gray-400 hover:bg-gray-800 hover:text-white',
+                                        'group flex gap-x-3 rounded-md p-2 text-sm font-semibold leading-6'
+                                      )
+                                    }
+                                  >
+                                    <item.icon
+                                      className='h-6 w-6 shrink-0'
+                                      aria-hidden='true'
+                                    />
+                                    {item.name}
+                                  </NavLink>
+                                </li>
+                              ))}
+                            </ul>
+                          </li>
+                          <li>
+                            <div className='text-xs font-semibold leading-6 text-gray-400'>
+                              Your teams
+                            </div>
+                            <ul role='list' className='-mx-2 mt-2 space-y-1'>
+                              {teams.map((team) => (
+                                <li key={team.name}>
+                                  <NavLink
+                                    to={team.href}
+                                    className={({ isActive }) =>
+                                      classNames(
+                                        isActive
+                                          ? 'bg-gray-800 text-white'
+                                          : 'text-gray-400 hover:bg-gray-800 hover:text-white',
+                                        'group flex gap-x-3 rounded-md p-2 text-sm font-semibold leading-6'
+                                      )
+                                    }
+                                  >
+                                    <span className='flex h-6 w-6 shrink-0 items-center justify-center rounded-lg border border-gray-700 bg-gray-800 text-[0.625rem] font-medium text-gray-400 group-hover:text-white'>
+                                      {team.initial}
+                                    </span>
+                                    <span className='truncate'>
+                                      {team.name}
+                                    </span>
+                                  </NavLink>
+                                </li>
+                              ))}
+                            </ul>
+                          </li>
+                        </ul>
+                      </nav>
+                    </div>
+                  </DialogPanel>
+                </TransitionChild>
+              </div>
+            </Dialog>
+          </Transition>
 
-          <label className='mr-2'>Person:</label>
-          <input
-            type='text'
-            value={person}
-            onChange={handlePersonChange}
-            className='p-2 border'
-            placeholder='Enter name'
-          />
+          <div className='hidden lg:fixed lg:inset-y-0 lg:z-50 lg:flex lg:w-72 lg:flex-col border-r border-gray-700'>
+            <div className='flex grow flex-col gap-y-5 overflow-y-auto bg-gray-900 px-6'>
+              <div className='flex h-16 shrink-0 items-center'>
+                <img
+                  className='h-8 w-auto'
+                  src='https://tailwindui.com/img/logos/mark.svg?color=indigo&shade=500'
+                  alt='Your Company'
+                />
+              </div>
+              <nav className='flex flex-1 flex-col'>
+                <ul role='list' className='flex flex-1 flex-col gap-y-7'>
+                  <li>
+                    <ul role='list' className='-mx-2 space-y-1'>
+                      {navigation.map((item) => (
+                        <li key={item.name}>
+                          <NavLink
+                            to={item.href}
+                            className={({ isActive }) =>
+                              classNames(
+                                isActive
+                                  ? 'bg-gray-800 text-white'
+                                  : 'text-gray-400 hover:bg-gray-800 hover:text-white',
+                                'group flex gap-x-3 rounded-md p-2 text-sm font-semibold leading-6'
+                              )
+                            }
+                          >
+                            <item.icon
+                              className='h-6 w-6 shrink-0'
+                              aria-hidden='true'
+                            />
+                            {item.name}
+                          </NavLink>
+                        </li>
+                      ))}
+                    </ul>
+                  </li>
+                  <li>
+                    <div className='text-xs font-semibold leading-6 text-gray-400'>
+                      Your teams
+                    </div>
+                    <ul role='list' className='-mx-2 mt-2 space-y-1'>
+                      {teams.map((team) => (
+                        <li key={team.name}>
+                          <NavLink
+                            to={team.href}
+                            className={({ isActive }) =>
+                              classNames(
+                                isActive
+                                  ? 'bg-gray-800 text-white'
+                                  : 'text-gray-400 hover:bg-gray-800 hover:text-white',
+                                'group flex gap-x-3 rounded-md p-2 text-sm font-semibold leading-6'
+                              )
+                            }
+                          >
+                            <span className='flex h-6 w-6 shrink-0 items-center justify-center rounded-lg border border-gray-700 bg-gray-800 text-[0.625rem] font-medium text-gray-400 group-hover:text-white'>
+                              {team.initial}
+                            </span>
+                            <span className='truncate'>{team.name}</span>
+                          </NavLink>
+                        </li>
+                      ))}
+                    </ul>
+                  </li>
+                  <li className='-mx-6 mt-auto'>
+                    <a
+                      href='#'
+                      className='flex items-center gap-x-4 px-6 py-3 text-sm font-semibold leading-6 text-white hover:bg-gray-800'
+                    >
+                      <img
+                        className='h-8 w-8 rounded-full bg-gray-800'
+                        src='https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80'
+                        alt=''
+                      />
+                      <span className='sr-only'>Your profile</span>
+                      <span aria-hidden='true'>Tom Cook</span>
+                    </a>
+                  </li>
+                </ul>
+              </nav>
+            </div>
+          </div>
+
+          <div className='sticky top-0 z-40 flex items-center gap-x-6 bg-gray-900 px-4 py-4 shadow-sm sm:px-6 lg:hidden border-b border-gray-700'>
+            <button
+              type='button'
+              className='-m-2.5 p-2.5 text-gray-400 lg:hidden'
+              onClick={() => setSidebarOpen(true)}
+            >
+              <span className='sr-only'>Open sidebar</span>
+              <Bars3Icon className='h-6 w-6' aria-hidden='true' />
+            </button>
+            <div className='flex-1 text-sm font-semibold leading-6 text-white'>
+              Dashboard
+            </div>
+            <a href='#'>
+              <span className='sr-only'>Your profile</span>
+              <img
+                className='h-8 w-8 rounded-full bg-gray-800'
+                src='https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80'
+                alt=''
+              />
+            </a>
+          </div>
+
+          <main className='py-10 lg:pl-72'>
+            <div className='px-4 sm:px-6 lg:px-8'>
+              <Routes>
+                <Route path='/login' element={<LoginForm />} />
+                <Route path='/wachtlijst' element={<Wachtlijst />} />
+              </Routes>
+            </div>
+          </main>
         </div>
-        <ShiftTable
-          month={month}
-          year={year}
-          shifts={shifts}
-          lastName={person}
-          holidays={holidays}
-          vacations={vacations}
-          locale={locale}
-          shiftTypes={shiftTypes}
-        />
-      </main>
-    </div>
+      </Fragment>
+    </Router>
   );
-};
-
-export default App;
+}
