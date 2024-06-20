@@ -1,14 +1,39 @@
 /** @type {import('tailwindcss').Config} */
+const colors = require('tailwindcss/colors');
 module.exports = {
-  content: ["./src/**/*.{js,jsx,ts,tsx}"],
-  darkMode: "class",
+  content: ['./src/**/*.{js,jsx,ts,tsx}'],
+  darkMode: 'media',
   theme: {
-    extend: {
-      currentMonthBg: "bg-white", // Witte achtergrond voor de huidige maand
-      currentMonthText: "text-gray-700", // Zwarte tekst voor de huidige maand
-      otherMonthBg: "bg-gray-200", // Grijze achtergrond voor andere maanden
-      otherMonthText: "text-gray-500", // Lichtere grijze tekst voor andere maanden
+    extends: {
+      colors: {
+        calendar: {
+          activeMonth: {
+            bg: colors.gray[50],
+            text: colors.gray[900],
+            border: colors.blue[500],
+          },
+          inActiveMonth: {
+            bg: colors.gray[200],
+            text: colors.gray[400],
+          },
+          header: {
+            bg: colors.gray[200],
+            text: colors.gray[900],
+            border: colors.gray[200],
+          },
+          weekdaysHeader: {
+            bg: colors.gray[50],
+            text: colors.gray[700],
+            border: colors.gray[300],
+          },
+        },
+        dark: {
+          bg: colors.gray[900],
+          border: colors.yellow[400],
+          text: colors.gray[50],
+        },
+      },
     },
   },
-  plugins: [require("@tailwindcss/forms")],
+  plugins: [require('@tailwindcss/forms')],
 };
