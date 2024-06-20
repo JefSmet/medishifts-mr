@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
 import {
   ChevronDownIcon,
   ChevronLeftIcon,
@@ -417,13 +416,13 @@ const Calendar = ({ month, year, events }) => {
                 .slice(1)}
           </div>
         </div>
-        <div className='flex bg-gray-200 text-xs leading-6 text-gray-700 lg:flex-auto'>
+        <div className='flex bg-gray-200 text-xs leading-6 text-current-month lg:flex-auto'>
           <div className='hidden w-full lg:grid lg:grid-cols-7 lg:grid-rows-6 lg:gap-px'>
             {days.map((day) => (
               <div
                 key={day.date}
                 className={classNames(
-                  day.isCurrentMonth ? 'bg-white' : 'bg-gray-200 text-gray-500',
+                  day.isCurrentMonth ? 'bg-white' : 'bg-other-month text-other-month',
                   'relative px-3 py-2'
                 )}
               >
