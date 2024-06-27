@@ -17,7 +17,7 @@ function padLeft(number, targetLength) {
  * @param {string} [delimiter="-"] - The delimiter to separate the components.
  * @return {string} The formatted date string with specified components.
  */
-function toDateOnlyString(
+export function toDateOnlyString(
   date,
   order = ["year", "month", "day"],
   delimiter = "-"
@@ -43,7 +43,7 @@ function toDateOnlyString(
  * @param {string} locale - The locale for date formatting.
  * @return {Array} An array of date records for each day in the month.
  */
-function generateMonthDays(month, year, locale) {
+export function generateMonthDays(month, year, locale) {
   const daysInMonth = new Date(year, month, 0).getDate();
   const daysArray = [];
 
@@ -76,7 +76,7 @@ function generateMonthDays(month, year, locale) {
  * @param {number} [firstDayOfWeek=1] - The first day of the week (0=Sunday, 1=Monday, etc.).
  * @returns {Object} An object containing details about the grid.
  */
-function calculateMonthGridDetails(month, year, firstDayOfWeek = 1) {
+export function calculateMonthGridDetails(month, year, firstDayOfWeek = 1) {
   // Calculate the number of days in the month
   const daysInMonth = new Date(year, month, 0).getDate();
 
@@ -133,8 +133,8 @@ function calculateMonthGridDetails(month, year, firstDayOfWeek = 1) {
   };
 }
 
-module.exports = {
-  toDateOnlyString,
-  generateMonthDays,
-  calculateMonthGridDetails,
-};
+// module.exports = {
+//   toDateOnlyString,
+//   generateMonthDays,
+//   calculateMonthGridDetails,
+// };
