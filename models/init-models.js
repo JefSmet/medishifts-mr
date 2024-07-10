@@ -1,18 +1,21 @@
-var DataTypes = require('sequelize').DataTypes;
-var _activities = require('./activities');
-var _activity_types = require('./activity_types');
-var _doctors = require('./doctors');
-var _persons = require('./persons');
-var _user_roles = require('./user_roles');
-var _users = require('./users');
+import _sequelize from 'sequelize';
+import _Query from './Query.js';
+import _activities from './activities.js';
+import _activity_types from './activity_types.js';
+import _doctors from './doctors.js';
+import _persons from './persons.js';
+import _user_roles from './user_roles.js';
+import _users from './users.js';
+const DataTypes = _sequelize.DataTypes;
 
-function initModels(sequelize) {
-  var activities = _activities(sequelize, DataTypes);
-  var activity_types = _activity_types(sequelize, DataTypes);
-  var doctors = _doctors(sequelize, DataTypes);
-  var persons = _persons(sequelize, DataTypes);
-  var user_roles = _user_roles(sequelize, DataTypes);
-  var users = _users(sequelize, DataTypes);
+export default function initModels(sequelize) {
+  const Query = _Query.init(sequelize, DataTypes);
+  const activities = _activities.init(sequelize, DataTypes);
+  const activity_types = _activity_types.init(sequelize, DataTypes);
+  const doctors = _doctors.init(sequelize, DataTypes);
+  const persons = _persons.init(sequelize, DataTypes);
+  const user_roles = _user_roles.init(sequelize, DataTypes);
+  const users = _users.init(sequelize, DataTypes);
 
   activities.belongsTo(activity_types, { foreignKey: 'activity_type_id' });
   activity_types.hasMany(activities, { foreignKey: 'activity_type_id' });
@@ -26,6 +29,7 @@ function initModels(sequelize) {
   users.hasMany(user_roles, { foreignKey: 'user_id' });
 
   return {
+    Query,
     activities,
     activity_types,
     doctors,
@@ -34,6 +38,3 @@ function initModels(sequelize) {
     users,
   };
 }
-module.exports = initModels;
-module.exports.initModels = initModels;
-module.exports.default = initModels;

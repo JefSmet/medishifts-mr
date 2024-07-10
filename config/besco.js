@@ -1,14 +1,18 @@
-const { Sequelize } = require('sequelize');
-require('dotenv').config();
+import dotenv from 'dotenv';
+import { Sequelize } from 'sequelize';
 
-const sequelizeBesco = new Sequelize({
-  dialect: process.env.BESCO_DB_DIALECT,
-  database: process.env.BESCO_DB_NAME,
-  username: process.env.BESCO_DB_USER,
-  password: process.env.BESCO_DB_PASS,
-  host: process.env.BESCO_DB_HOST,
-  port: process.env.BESCO_DB_PORT,
-  timezone: '+02:00',
-});
+dotenv.config();
 
-module.exports = sequelizeBesco;
+const sequelizeBesco = new Sequelize(
+  process.env.BESCO_DB_NAME,
+  process.env.BESCO_DB_USER,
+  process.env.BESCO_DB_PASS,
+  {
+    host: process.env.BESCO_DB_HOST,
+    dialect: process.env.BESCO_DB_DIALECT,
+    port: process.env.BESCO_DB_PORT,
+    timezone: '+02:00',
+  },
+);
+
+export default sequelizeBesco;

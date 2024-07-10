@@ -1,0 +1,20 @@
+<svg
+  xmlns="http://www.w3.org/2000/svg"
+  viewBox="0 0 24 24"
+  fill="none"
+  stroke="currentColor"
+  aria-hidden="true"
+  stroke-width="1.5"
+>
+  <g>
+    <polygon
+      points="19 17.092 19 19.092 12 19.092 12 21.092 19 21.092 19 23.092 22 20.092 19 17.092"
+    />
+    <polygon points="15 12 12 15 15 18 15 16 22 16 22 14 15 14 15 12" />
+    <path
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      d="M10,15l4-4h2v2h2V10.024c0-.012.6-.019,0-.021V2H14V0H12V2H6V0H4V2H0V20H11V18h2ZM2,4H4V6H6V4h6V6h2V4h2V7H2Z"
+    />
+  </g>
+</svg>

@@ -1,8 +1,7 @@
 /** @type {import('tailwindcss').Config} */
-const colors = require("tailwindcss/colors");
-module.exports = {
-  content: ["./src/**/*.{js,jsx,ts,tsx}"],
-  darkMode: "media",
+import colors from 'tailwindcss/colors';
+export default {
+  content: ['./index.html', './src/**/*.{js,ts,jsx,tsx}'],
   theme: {
     extend: {
       colors: {
@@ -58,5 +57,5 @@ module.exports = {
       },
     },
   },
-  plugins: [require("@tailwindcss/forms")],
+  plugins: [require('@tailwindcss/forms')],
 };

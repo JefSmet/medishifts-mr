@@ -1,14 +1,18 @@
-const { Sequelize } = require('sequelize');
-require('dotenv').config();
+import dotenv from 'dotenv';
+import { Sequelize } from 'sequelize';
 
-const sequelize = new Sequelize({
-  dialect: process.env.DB_DIALECT,
-  database: process.env.DB_NAME,
-  username: process.env.DB_USER,
-  password: process.env.DB_PASS,
-  host: process.env.DB_HOST,
-  port: process.env.DB_PORT,
-  timezone: '+02:00',
-});
+dotenv.config();
 
-module.exports = sequelize;
+const sequelize = new Sequelize(
+  process.env.DB_NAME,
+  process.env.DB_USER,
+  process.env.DB_PASS,
+  {
+    host: process.env.DB_HOST,
+    dialect: process.env.DB_DIALECT,
+    port: process.env.DB_PORT,
+    timezone: '+02:00',
+  },
+);
+
+export default sequelize;

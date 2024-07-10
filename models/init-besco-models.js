@@ -1,13 +1,11 @@
-const DataTypes = require('sequelize').DataTypes;
-const _qualificationCode = require('./bescoQualificationCode');
+import _sequelize from 'sequelize';
+import _qualificationCode from './bescoQualificationCode.js';
 
-function initBescoModels(sequelize) {
-  const qualificationCode = _qualificationCode(sequelize, DataTypes);
+const DataTypes = _sequelize.DataTypes;
 
+export default function initBescoModels(sequelize) {
+  const qualificationCode = _qualificationCode.init(sequelize, DataTypes);
   return {
     qualificationCode,
   };
 }
-module.exports = initBescoModels;
-module.exports.initBescoModels = initBescoModels;
-module.exports.default = initBescoModels;

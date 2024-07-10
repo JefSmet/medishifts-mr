@@ -6,7 +6,7 @@
  * @return {string} The padded number as a string.
  */
 function padLeft(number, targetLength) {
-  return String(number).padStart(targetLength, "0");
+  return String(number).padStart(targetLength, '0');
 }
 
 /**
@@ -17,10 +17,10 @@ function padLeft(number, targetLength) {
  * @param {string} [delimiter="-"] - The delimiter to separate the components.
  * @return {string} The formatted date string with specified components.
  */
-export function toDateOnlyString(
+function toDateOnlyString(
   date,
-  order = ["year", "month", "day"],
-  delimiter = "-"
+  order = ['year', 'month', 'day'],
+  delimiter = '-',
 ) {
   const datum = new Date(date);
   let components = {
@@ -43,19 +43,19 @@ export function toDateOnlyString(
  * @param {string} locale - The locale for date formatting.
  * @return {Array} An array of date records for each day in the month.
  */
-export function generateMonthDays(month, year, locale) {
+function generateMonthDays(month, year, locale) {
   const daysInMonth = new Date(year, month, 0).getDate();
   const daysArray = [];
 
   for (let day = 1; day <= daysInMonth; day++) {
     const date = new Date(year, month - 1, day);
     const dayStringNumeric = date.toLocaleDateString(locale, {
-      day: "2-digit",
-      month: "2-digit",
-      year: "numeric",
+      day: '2-digit',
+      month: '2-digit',
+      year: 'numeric',
     });
     const dayStringWeekDay = date.toLocaleDateString(locale, {
-      weekday: "short",
+      weekday: 'short',
     });
     const dateRecord = {
       caption: `${dayStringNumeric} ${dayStringWeekDay}`,
@@ -76,7 +76,7 @@ export function generateMonthDays(month, year, locale) {
  * @param {number} [firstDayOfWeek=1] - The first day of the week (0=Sunday, 1=Monday, etc.).
  * @returns {Object} An object containing details about the grid.
  */
-export function calculateMonthGridDetails(month, year, firstDayOfWeek = 1) {
+function calculateMonthGridDetails(month, year, firstDayOfWeek = 1) {
   // Calculate the number of days in the month
   const daysInMonth = new Date(year, month, 0).getDate();
 
@@ -117,12 +117,12 @@ export function calculateMonthGridDetails(month, year, firstDayOfWeek = 1) {
   const firstDate = new Date(
     prevYear,
     prevMonth,
-    startColumn === 0 ? daysInPrevMonth - 6 : daysInPrevMonth - startColumn + 1
+    startColumn === 0 ? daysInPrevMonth - 6 : daysInPrevMonth - startColumn + 1,
   );
   const lastDate = new Date(
     nextYear,
     nextMonth,
-    endColumn === 6 ? 7 : 6 - endColumn
+    endColumn === 6 ? 7 : 6 - endColumn,
   );
   return {
     numRows: numRows,
@@ -133,8 +133,4 @@ export function calculateMonthGridDetails(month, year, firstDayOfWeek = 1) {
   };
 }
 
-// module.exports = {
-//   toDateOnlyString,
-//   generateMonthDays,
-//   calculateMonthGridDetails,
-// };
+export { calculateMonthGridDetails, generateMonthDays, toDateOnlyString };

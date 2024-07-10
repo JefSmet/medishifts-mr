@@ -1,20 +1,6 @@
-import classNames from "../utils/tailwindUtils";
+import React, { useEffect, useState } from "react";
 import { toDateOnlyString } from "../utils/dateTimeUtils";
-import React, { useState, useEffect } from "react";
-import {
-  ChevronDownIcon,
-  ChevronLeftIcon,
-  ChevronRightIcon,
-  ClockIcon,
-  EllipsisHorizontalIcon,
-} from "@heroicons/react/20/solid";
-import {
-  Menu,
-  MenuButton,
-  MenuItem,
-  MenuItems,
-  Transition,
-} from "@headlessui/react";
+import classNames from "../utils/tailwindUtils";
 
 /**
  * Generates an array of days of the week based on the provided first day of the week.
