@@ -1,5 +1,5 @@
 import * as React from 'react';
-import * as ReactDOM from "react-dom/client";
+import * as ReactDOM from 'react-dom/client';
 import {
   Route,
   RouterProvider,
@@ -8,21 +8,21 @@ import {
 } from 'react-router-dom';
 import ErrorPage from './error-page.jsx';
 import './index.css';
-import MonthActivityView from './routes/monthActivities.jsx';
+import Werkrooster from './routes/werkrooster.jsx';
 import Root from './routes/root.jsx';
-
+import Dashboard from './components/dashboard.jsx';
+import { loader as werkroosterLoader } from './routes/werkrooster.jsx';
 
 const router = createBrowserRouter(
   createRoutesFromElements(
-    <Route
-      path="/"
-      element={<Root />}     
-      errorElement={<ErrorPage />} 
-    >    
-      <Route 
-        path="monthActivities/" 
-        element={<MonthActivityView />} />  
-    </Route>,   
+    <Route path="/" element={<Root />} errorElement={<ErrorPage />}>
+      <Route
+        path="werkrooster/"
+        element={<Werkrooster />}
+        loader={werkroosterLoader}
+      />
+      <Route path="dashboard/" element={<Dashboard />} />
+    </Route>,
   ),
 );
 

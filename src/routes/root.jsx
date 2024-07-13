@@ -11,9 +11,8 @@ import {
   XMarkIcon,
 } from '@heroicons/react/24/outline';
 import { useState } from 'react';
-import { Outlet } from 'react-router-dom';
+import { NavLink, Outlet, useLocation } from 'react-router-dom';
 import Avatar from '../components/avatar.jsx';
-//import pofileImage from '../icons/565_Smet_Filip_F_sm.jpg';
 import {
   CalendarDoctor,
   CalendarFlow,
@@ -22,29 +21,64 @@ import {
 } from '../icons/index.js';
 import classNames from '../utils/tailwindUtils.js';
 
-const navigation = [
-  { name: 'Dashboard', href: '#', icon: HomeIcon, current: false },
+const navigationItems = [
+  {
+    name: 'Dashboard',
+    href: '/dashboard',
+    icon: HomeIcon,
+    id: 'dashboard',
+  },
   {
     name: 'Werkrooster',
-    href: '/monthActivities',
+    href: '/werkrooster',
     icon: CalendarDoctor,
-    current: true,
+    id: 'werkrooster',
   },
-  { name: 'Vakantiebeheer', href: '#', icon: CalendarTravel, current: false },
-  { name: 'Dienstwissels', href: '#', icon: CalendarFlow, current: false },
-  { name: 'Rapporten', href: '#', icon: ChartPieIcon, current: false },
+  {
+    name: 'Vakantiebeheer',
+    href: '/vakantiebeheer',
+    icon: CalendarTravel,
+    id: 'vakantiebeheer',
+  },
+  {
+    name: 'Dienstwissels',
+    href: '/dienstwissels',
+    icon: CalendarFlow,
+    id: 'dienstwissels',
+  },
+  {
+    name: 'Rapporten',
+    href: '/rapporten',
+    icon: ChartPieIcon,
+    id: 'rapporten',
+  },
 ];
-const administration = [
-  { id: 1, name: 'Artsen', href: '#', initial: 'H', current: false },
+
+const administrationItems = [
+  {
+    id: 1,
+    name: 'Artsen',
+    href: '/artsen',
+    initial: 'H',
+  },
   {
     id: 2,
     name: 'Kalenderabonnement',
-    href: '#',
+    href: '/kalenderabonnement',
     initial: 'T',
-    current: false,
   },
-  { id: 3, name: 'Instellingen', href: '#', initial: 'W', current: false },
-  { id: 3, name: 'Help', href: '#', initial: 'W', current: false },
+  {
+    id: 3,
+    name: 'Instellingen',
+    href: '/instellingen',
+    initial: 'W',
+  },
+  {
+    id: 4,
+    name: 'Help',
+    href: '/help',
+    initial: 'H',
+  },
 ];
 
 const currentUser = {
@@ -54,6 +88,11 @@ const currentUser = {
 
 export default function Root() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const location = useLocation();
+
+  const handleNavLinkClick = () => {
+    setSidebarOpen(false);
+  };
 
   return (
     <>
@@ -88,42 +127,43 @@ export default function Root() {
                   </button>
                 </div>
               </TransitionChild>
-              {/* Sidebar component, swap this element with another sidebar if you like */}
               <div className="flex grow flex-col gap-y-5 overflow-y-auto bg-white px-6 pb-2">
                 <div className="flex h-16 shrink-0 items-center">
-                  {/* <img
-                    className="h-8 w-auto"
-                    src="https://tailwindui.com/img/logos/mark.svg?color=indigo&shade=600"
-                    alt="Your Company"
-                  /> */}
                   <LogoMonica height="6rem" className="w-auto" />
                 </div>
                 <nav className="flex flex-1 flex-col">
                   <ul role="list" className="flex flex-1 flex-col gap-y-7">
                     <li>
                       <ul role="list" className="-mx-2 space-y-1">
-                        {navigation.map((item) => (
-                          <li key={item.name}>
-                            <a
-                              href={item.href}
-                              className={classNames(
-                                item.current
-                                  ? 'bg-gray-50 text-indigo-600'
-                                  : 'text-gray-700 hover:bg-gray-50 hover:text-indigo-600',
-                                'group flex gap-x-3 rounded-md p-2 text-sm font-semibold leading-6',
-                              )}
+                        {navigationItems.map((item) => (
+                          <li key={item.id}>
+                            <NavLink
+                              to={item.href}
+                              onClick={handleNavLinkClick}
+                              className={({ isActive }) =>
+                                classNames(
+                                  isActive
+                                    ? 'bg-gray-50 text-indigo-600'
+                                    : 'text-gray-700 hover:bg-gray-50 hover:text-indigo-600',
+                                  'group flex gap-x-3 rounded-md p-2 text-sm font-semibold leading-6',
+                                )
+                              }
                             >
-                              <item.icon
-                                className={classNames(
-                                  item.current
-                                    ? 'text-indigo-600'
-                                    : 'text-gray-400 group-hover:text-indigo-600',
-                                  'h-6 w-6 shrink-0',
-                                )}
-                                aria-hidden="true"
-                              />
-                              {item.name}
-                            </a>
+                              {({ isActive }) => (
+                                <>
+                                  <item.icon
+                                    className={classNames(
+                                      isActive
+                                        ? 'text-indigo-600'
+                                        : 'text-gray-400 group-hover:text-indigo-600',
+                                      'h-6 w-6 shrink-0',
+                                    )}
+                                    aria-hidden="true"
+                                  />
+                                  {item.name}
+                                </>
+                              )}
+                            </NavLink>
                           </li>
                         ))}
                       </ul>
@@ -133,29 +173,36 @@ export default function Root() {
                         Your teams
                       </div>
                       <ul role="list" className="-mx-2 mt-2 space-y-1">
-                        {administration.map((team) => (
-                          <li key={team.name}>
-                            <a
-                              href={team.href}
-                              className={classNames(
-                                team.current
-                                  ? 'bg-gray-50 text-indigo-600'
-                                  : 'text-gray-700 hover:bg-gray-50 hover:text-indigo-600',
-                                'group flex gap-x-3 rounded-md p-2 text-sm font-semibold leading-6',
-                              )}
+                        {administrationItems.map((team) => (
+                          <li key={team.id}>
+                            <NavLink
+                              to={team.href}
+                              onClick={handleNavLinkClick}
+                              className={({ isActive }) =>
+                                classNames(
+                                  isActive
+                                    ? 'bg-gray-50 text-indigo-600'
+                                    : 'text-gray-700 hover:bg-gray-50 hover:text-indigo-600',
+                                  'group flex gap-x-3 rounded-md p-2 text-sm font-semibold leading-6',
+                                )
+                              }
                             >
-                              <span
-                                className={classNames(
-                                  team.current
-                                    ? 'border-indigo-600 text-indigo-600'
-                                    : 'border-gray-200 text-gray-400 group-hover:border-indigo-600 group-hover:text-indigo-600',
-                                  'flex h-6 w-6 shrink-0 items-center justify-center rounded-lg border bg-white text-[0.625rem] font-medium',
-                                )}
-                              >
-                                {team.initial}
-                              </span>
-                              <span className="truncate">{team.name}</span>
-                            </a>
+                              {({ isActive }) => (
+                                <>
+                                  <span
+                                    className={classNames(
+                                      isActive
+                                        ? 'border-indigo-600 text-indigo-600'
+                                        : 'border-gray-200 text-gray-400 group-hover:border-indigo-600 group-hover:text-indigo-600',
+                                      'flex h-6 w-6 shrink-0 items-center justify-center rounded-lg border bg-white text-[0.625rem] font-medium',
+                                    )}
+                                  >
+                                    {team.initial}
+                                  </span>
+                                  <span className="truncate">{team.name}</span>
+                                </>
+                              )}
+                            </NavLink>
                           </li>
                         ))}
                       </ul>
@@ -169,42 +216,42 @@ export default function Root() {
 
         {/* Static sidebar for desktop */}
         <div className="hidden lg:fixed lg:inset-y-0 lg:z-50 lg:flex lg:w-72 lg:flex-col">
-          {/* Sidebar component, swap this element with another sidebar if you like */}
           <div className="flex grow flex-col gap-y-5 overflow-y-auto border-r border-gray-200 bg-white px-6">
             <div className="flex h-16 shrink-0 items-center">
-              {/* <img
-                className="h-8 w-auto"
-                src="https://tailwindui.com/img/logos/mark.svg?color=indigo&shade=600"
-                alt="Your Company"
-              /> */}
               <LogoMonica height="6rem" className="w-auto" />
             </div>
             <nav className="flex flex-1 flex-col">
               <ul role="list" className="flex flex-1 flex-col gap-y-7">
                 <li>
                   <ul role="list" className="-mx-2 space-y-1">
-                    {navigation.map((item) => (
-                      <li key={item.name}>
-                        <a
-                          href={item.href}
-                          className={classNames(
-                            item.current
-                              ? 'bg-gray-50 text-indigo-600'
-                              : 'text-gray-700 hover:bg-gray-50 hover:text-indigo-600',
-                            'group flex gap-x-3 rounded-md p-2 text-sm font-semibold leading-6',
-                          )}
+                    {navigationItems.map((item) => (
+                      <li key={item.id}>
+                        <NavLink
+                          to={item.href}
+                          className={({ isActive }) =>
+                            classNames(
+                              isActive
+                                ? 'bg-gray-50 text-indigo-600'
+                                : 'text-gray-700 hover:bg-gray-50 hover:text-indigo-600',
+                              'group flex gap-x-3 rounded-md p-2 text-sm font-semibold leading-6',
+                            )
+                          }
                         >
-                          <item.icon
-                            className={classNames(
-                              item.current
-                                ? 'text-indigo-600'
-                                : 'text-gray-400 group-hover:text-indigo-600',
-                              'h-6 w-6 shrink-0',
-                            )}
-                            aria-hidden="true"
-                          />
-                          {item.name}
-                        </a>
+                          {({ isActive }) => (
+                            <>
+                              <item.icon
+                                className={classNames(
+                                  isActive
+                                    ? 'text-indigo-600'
+                                    : 'text-gray-400 group-hover:text-indigo-600',
+                                  'h-6 w-6 shrink-0',
+                                )}
+                                aria-hidden="true"
+                              />
+                              {item.name}
+                            </>
+                          )}
+                        </NavLink>
                       </li>
                     ))}
                   </ul>
@@ -214,29 +261,35 @@ export default function Root() {
                     Your teams
                   </div>
                   <ul role="list" className="-mx-2 mt-2 space-y-1">
-                    {administration.map((team) => (
-                      <li key={team.name}>
-                        <a
-                          href={team.href}
-                          className={classNames(
-                            team.current
-                              ? 'bg-gray-50 text-indigo-600'
-                              : 'text-gray-700 hover:bg-gray-50 hover:text-indigo-600',
-                            'group flex gap-x-3 rounded-md p-2 text-sm font-semibold leading-6',
-                          )}
+                    {administrationItems.map((team) => (
+                      <li key={team.id}>
+                        <NavLink
+                          to={team.href}
+                          className={({ isActive }) =>
+                            classNames(
+                              isActive
+                                ? 'bg-gray-50 text-indigo-600'
+                                : 'text-gray-700 hover:bg-gray-50 hover:text-indigo-600',
+                              'group flex gap-x-3 rounded-md p-2 text-sm font-semibold leading-6',
+                            )
+                          }
                         >
-                          <span
-                            className={classNames(
-                              team.current
-                                ? 'border-indigo-600 text-indigo-600'
-                                : 'border-gray-200 text-gray-400 group-hover:border-indigo-600 group-hover:text-indigo-600',
-                              'flex h-6 w-6 shrink-0 items-center justify-center rounded-lg border bg-white text-[0.625rem] font-medium',
-                            )}
-                          >
-                            {team.initial}
-                          </span>
-                          <span className="truncate">{team.name}</span>
-                        </a>
+                          {({ isActive }) => (
+                            <>
+                              <span
+                                className={classNames(
+                                  isActive
+                                    ? 'border-indigo-600 text-indigo-600'
+                                    : 'border-gray-200 text-gray-400 group-hover:border-indigo-600 group-hover:text-indigo-600',
+                                  'flex h-6 w-6 shrink-0 items-center justify-center rounded-lg border bg-white text-[0.625rem] font-medium',
+                                )}
+                              >
+                                {team.initial}
+                              </span>
+                              <span className="truncate">{team.name}</span>
+                            </>
+                          )}
+                        </NavLink>
                       </li>
                     ))}
                   </ul>
@@ -246,18 +299,6 @@ export default function Root() {
                     fullName={currentUser.name}
                     imageSource={currentUser.imageSource}
                   />
-                  {/* <a
-                    href="#"
-                    className="flex items-center gap-x-4 px-6 py-3 text-sm font-semibold leading-6 text-gray-900 hover:bg-gray-50"
-                  >
-                    <img
-                      className="h-8 w-8 rounded-full bg-gray-50"
-                      src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"
-                      alt=""
-                    />
-                    <span className="sr-only">Your profile</span>
-                    <span aria-hidden="true">Filip Smet</span>
-                  </a> */}
                 </li>
               </ul>
             </nav>
@@ -274,20 +315,13 @@ export default function Root() {
             <Bars3Icon className="h-6 w-6" aria-hidden="true" />
           </button>
           <div className="flex-1 text-sm font-semibold leading-6 text-gray-900">
-            Dashboard
+            {navigationItems.find((nav) => location.pathname === nav.href)
+              ?.name || ''}
           </div>
           <Avatar
             fullName={currentUser.name}
             imageSource={currentUser.imageSource}
           />
-          {/* <a href="#">
-            <span className="sr-only">Your profile</span>
-            <img
-              className="h-8 w-8 rounded-full bg-gray-50"
-              src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"
-              alt=""
-            />
-          </a> */}
         </div>
 
         <main className="py-10 lg:pl-72">

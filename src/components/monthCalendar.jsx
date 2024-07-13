@@ -1,6 +1,6 @@
-import React, { useEffect, useState } from "react";
-import { toDateOnlyString } from "../utils/dateTimeUtils";
-import classNames from "../utils/tailwindUtils";
+import React, { useEffect, useState } from 'react';
+import { toDateOnlyString } from '../utils/dateTimeUtils';
+import classNames from '../utils/tailwindUtils';
 
 /**
  * Generates an array of days of the week based on the provided first day of the week.
@@ -9,7 +9,7 @@ import classNames from "../utils/tailwindUtils";
  * @return {Array<string>} An array of strings representing the days of the week.
  */
 function daysOfWeek(firstDayOfWeek) {
-  const options = { weekday: "short", timeZone: "UTC" };
+  const options = { weekday: 'short', timeZone: 'UTC' };
   const days = [...new Array(7)].map(
     (_, i) =>
       new Date(0, 0, i + firstDayOfWeek)
@@ -80,10 +80,10 @@ function CalendarHeader({ month, year }) {
   return (
     <header className="flex items-center justify-between border-b border-calendar-header-border bg-calendar-header-bg px-6 py-4 lg:flex-none">
       <h1 className="text-base font-semibold leading-6 text-calendar-header-text">
-        <time dateTime={`${year}-${String(month).padStart(2, "0")}`}>
+        <time dateTime={`${year}-${String(month).padStart(2, '0')}`}>
           {new Intl.DateTimeFormat(navigator.language, {
-            month: "long",
-            year: "numeric",
+            month: 'long',
+            year: 'numeric',
           })
             .format(new Date(year, month - 1))
             .replace(/(^\w)/g, (match) => match.toUpperCase())}
@@ -94,7 +94,7 @@ function CalendarHeader({ month, year }) {
 }
 function WeekdaysHeader({ month, year, firstDayOfWeek = 1 }) {
   return (
-    <div className="bg-calendar-gridLines grid grid-cols-7 gap-px border-b text-center text-xs font-semibold leading-6 text-calendar-weekdaysHeader-text lg:flex-none">
+    <div className="grid grid-cols-7 gap-px border-b bg-calendar-gridLines text-center text-xs font-semibold leading-6 text-calendar-weekdaysHeader-text lg:flex-none">
       {daysOfWeek(firstDayOfWeek).map((day, index) => (
         <div key={index} className="bg-calendar-weekdays-bg py-2">
           {day.charAt(0)}
@@ -152,7 +152,7 @@ function DaysGrid({ month, year, events, firstDayOfWeek = 1 }) {
     setDays(dayList);
   }, [month, year, events]);
   return (
-    <div className="bg-calendar-gridLines flex text-xs leading-6 text-calendar-activeMonth-text lg:flex-auto">
+    <div className="flex bg-calendar-gridLines text-xs leading-6 text-calendar-activeMonth-text lg:flex-auto">
       {/* desktop */}
       <div className="hidden w-full lg:grid lg:grid-cols-7 lg:grid-rows-6 lg:gap-px">
         {days.map((day) => (
@@ -160,32 +160,32 @@ function DaysGrid({ month, year, events, firstDayOfWeek = 1 }) {
             key={day.date}
             className={classNames(
               day.isCurrentMonth
-                ? "bg-calendar-activeMonth-bg"
-                : "bg-calendar-inActiveMonth-bg text-calendar-inActiveMonth-text",
-              "relative px-3 py-2",
+                ? 'bg-calendar-activeMonth-bg'
+                : 'bg-calendar-inActiveMonth-bg text-calendar-inActiveMonth-text',
+              'relative px-3 py-2',
             )}
           >
             <time
               dateTime={day.date}
               className={
                 day.isToday
-                  ? "bg-calendar-daysGrid-today-bg text-calendar-daysGrid-today-text flex h-6 w-6 items-center justify-center rounded-full font-semibold"
+                  ? 'flex h-6 w-6 items-center justify-center rounded-full bg-calendar-daysGrid-today-bg font-semibold text-calendar-daysGrid-today-text'
                   : undefined
               }
             >
-              {day.date.split("-").pop().replace(/^0/, "")}
+              {day.date.split('-').pop().replace(/^0/, '')}
             </time>
             {day.events.length > 0 && (
               <ol className="mt-2">
                 {day.events.slice(0, 3).map((event) => (
                   <li key={event.id}>
                     <div className="group flex">
-                      <p className="text-calendar-events-textLeft flex-auto truncate font-medium">
+                      <p className="flex-auto truncate font-medium text-calendar-events-textLeft">
                         {event.name}
                       </p>
                       <time
                         dateTime={event.datetime}
-                        className="text-calendar-events-textRight ml-3 hidden flex-none xl:block"
+                        className="ml-3 hidden flex-none text-calendar-events-textRight xl:block"
                       >
                         {event.time}
                       </time>
@@ -210,25 +210,25 @@ function DaysGrid({ month, year, events, firstDayOfWeek = 1 }) {
             type="button"
             className={classNames(
               day.isCurrentMonth
-                ? "bg-calendar-activeMonth-bg"
-                : "bg-calendar-inActiveMonth-bg",
-              (day.isSelected || day.isToday) && "font-semibold",
-              day.isSelected && "text-calendar-daysGrid-selected-text",
+                ? 'bg-calendar-activeMonth-bg'
+                : 'bg-calendar-inActiveMonth-bg',
+              (day.isSelected || day.isToday) && 'font-semibold',
+              day.isSelected && 'text-calendar-daysGrid-selected-text',
               !day.isSelected &&
                 day.isToday &&
-                "text-calendar-daysGrid-today-textMobile font-bold",
+                'font-bold text-calendar-daysGrid-today-textMobile',
               !day.isSelected &&
                 day.isCurrentMonth &&
                 !day.isToday &&
-                "text-calendar-daysGrid-text",
+                'text-calendar-daysGrid-text',
               !day.isSelected &&
                 !day.isCurrentMonth &&
                 !day.isToday &&
-                "text-calendar-inActiveMonth-text",
+                'text-calendar-inActiveMonth-text',
               day.isSelected &&
                 !day.isCurrentMonth &&
-                "text-calendar-daysGrid-selected-text",
-              "hover:bg-calendar-daysGrid-bgHover flex h-14 flex-col px-3 py-2 focus:z-10",
+                'text-calendar-daysGrid-selected-text',
+              'flex h-14 flex-col px-3 py-2 hover:bg-calendar-daysGrid-bgHover focus:z-10',
             )}
             onClick={() => handleDayClick(day)}
           >
@@ -236,17 +236,17 @@ function DaysGrid({ month, year, events, firstDayOfWeek = 1 }) {
               dateTime={day.date}
               className={classNames(
                 day.isSelected &&
-                  "flex h-6 w-6 items-center justify-center rounded-full",
+                  'flex h-6 w-6 items-center justify-center rounded-full',
                 day.isSelected &&
                   day.isToday &&
-                  "bg-calendar-daysGrid-today-bg",
+                  'bg-calendar-daysGrid-today-bg',
                 day.isSelected &&
                   !day.isToday &&
-                  "bg-calendar-daysGrid-selected-bg",
-                "ml-auto",
+                  'bg-calendar-daysGrid-selected-bg',
+                'ml-auto',
               )}
             >
-              {day.date.split("-").pop().replace(/^0/, "")}
+              {day.date.split('-').pop().replace(/^0/, '')}
             </time>
             <span className="sr-only">{day.events.length} events</span>
             {day.events.length > 0 && (
@@ -254,7 +254,7 @@ function DaysGrid({ month, year, events, firstDayOfWeek = 1 }) {
                 {day.events.map((event) => (
                   <span
                     key={event.id}
-                    className="bg-calendar-events-bgMobile mx-0.5 mb-1 h-1.5 w-1.5 rounded-full"
+                    className="mx-0.5 mb-1 h-1.5 w-1.5 rounded-full bg-calendar-events-bgMobile"
                   />
                 ))}
               </span>

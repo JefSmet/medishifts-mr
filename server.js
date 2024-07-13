@@ -247,6 +247,49 @@ app.delete('/doctors/:id', async (req, res) => {
 
 // ACTIVITIES
 
+app.get('/activities/period/:startDate/:endDate', async (req, res) => {
+  const { startDate, endDate } = req.params;
+  try {
+    const activities = await models.activities.findAll({
+      where: {
+        begin_DT: {
+          [Op.gte]: startDate,
+        },
+        end_DT: {
+          [Op.lte]: endDate,
+        },
+        status: 'OK',
+      },
+      include: [
+        {
+          model: models.persons,
+          attributes: ['first_name', 'last_name'],
+        },
+        {
+          model: models.activity_types,
+          attributes: ['name'],
+          where: {
+            name: {
+              [Op.ne]: 'Verlof',
+            },
+          },
+        },
+      ],
+      order: [
+        ['begin_DT', 'ASC'],
+        [models.activity_types, 'name', 'ASC'],
+        [models.persons, 'last_name', 'ASC'],
+        [models.persons, 'first_name', 'ASC'],
+      ],
+    });
+
+    res.json(activities);
+  } catch (error) {
+    console.error(error);
+    res.status(500).send('Internal Server Error');
+  }
+});
+
 app.get('/activities/:year/:month', async (req, res) => {
   const { year, month } = req.params;
 
