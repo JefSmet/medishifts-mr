@@ -413,6 +413,7 @@ app.get('/activity_types/:id', async (req, res) => {
 });
 
 app.post('/activity_types', async (req, res) => {
+  console.log(req.body);
   try {
     const newActivityType = await models.activity_types.create(req.body);
     res.status(201).json(newActivityType);

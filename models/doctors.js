@@ -7,6 +7,7 @@ export default class doctors extends Model {
       {
         id: {
           type: DataTypes.UUID,
+          defaultValue: DataTypes.UUIDV4,
           allowNull: false,
           primaryKey: true,
         },
