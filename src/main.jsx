@@ -16,6 +16,7 @@ import { loader as werkroosterLoader } from './routes/werkrooster.jsx';
 import { action as createActivityTypeAction } from './components/createActivityType.jsx';
 import CreatePerson from './components/createPerson.jsx';
 import { action as createPersonAction } from './components/createPerson.jsx';
+import PersonsOverview from './components/personsOverview.jsx';
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -25,7 +26,11 @@ const router = createBrowserRouter(
         element={<Werkrooster />}
         loader={werkroosterLoader}
       />
-      <Route path="dashboard/" element={<CreatePerson />} action={createPersonAction} />
+      <Route
+        path="dashboard/"
+        element={<PersonsOverview />}
+        action={createPersonAction}
+      />
     </Route>,
   ),
 );
