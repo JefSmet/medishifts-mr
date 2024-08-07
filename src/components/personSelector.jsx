@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import {
   Label,
   Listbox,
@@ -14,9 +14,11 @@ export default function PersonSelector({ persons, onPersonSelect }) {
   const [selected, setSelected] = useState(persons[0]);
   function handleChange(event) {
     const selectedPerson = persons.find((person) => person.id === event.id);
-    onPersonSelect(selectedPerson);
     setSelected(selectedPerson);
   }
+  useEffect(() => {
+    onPersonSelect(selected.id);
+  }, [selected]);
   return (
     <Listbox value={selected} onChange={handleChange}>
       <Label className="block text-sm font-medium leading-6 text-gray-900">
