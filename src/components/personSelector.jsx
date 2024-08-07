@@ -10,12 +10,15 @@ import {
 } from '@headlessui/react';
 import { CheckIcon, ChevronUpDownIcon } from '@heroicons/react/20/solid';
 
-export default function PersonSelector({ persons }) {
-  console.log(persons);
+export default function PersonSelector({ persons, onPersonSelect }) {
   const [selected, setSelected] = useState(persons[0]);
-
+  function handleChange(event) {
+    const selectedPerson = persons.find((person) => person.id === event.id);
+    onPersonSelect(selectedPerson);
+    setSelected(selectedPerson);
+  }
   return (
-    <Listbox value={selected} onChange={setSelected}>
+    <Listbox value={selected} onChange={handleChange}>
       <Label className="block text-sm font-medium leading-6 text-gray-900">
         Assigned to
       </Label>

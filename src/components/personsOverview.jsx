@@ -10,13 +10,14 @@ const apiRoute = import.meta.env.VITE_API_ROUTE + '/persons';
 export default function PersonsOverview() {
   const [persons, setPersons] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [selectedPerson, setSelectedPerson] = useState(null);
+  const [isDeleting, setIsDeleting] = useState(false);
 
   useEffect(() => {
     axios
       .get(apiRoute)
       .then((response) => {
         setPersons(response.data);
-        console.log('resonse', response.data);
         setIsLoading(false);
       })
       .catch((error) => {
@@ -28,17 +29,22 @@ export default function PersonsOverview() {
   if (isLoading) {
     return <div>Loading...</div>;
   }
-  console.log(persons);
+  function handlePersonSelect(person) {
+    setSelectedPerson(person);
+  }
+  function handleDelete(value) {
+    setIsDeleting(value);
+  }
   return (
     <div>
       <div className="flex items-center justify-between">
         <h1 className="mb-4 text-3xl font-bold">Persons</h1>
       </div>
       <div>
-        <PersonSelector persons={persons} />
+        <PersonSelector persons={persons} onPersonSelect={handlePersonSelect} />
       </div>
-      <UpdatePerson />
-      <DeletePerson />
+      <UpdatePerson id={selectedPerson} />
+      <DeletePerson id={selectedPerson} onDelete={handleDelete} />
     </div>
   );
 }
