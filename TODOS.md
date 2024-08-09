@@ -1,5 +1,4 @@
 Schermen maken voor alle cruds
-Persons - update
 ActivityTypes - update, delete
 Activities - create update delete
 Doctors - create update delete
