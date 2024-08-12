@@ -2,7 +2,8 @@ Schermen maken voor alle cruds
     Activities - create update delete
     Doctors - create update delete
     Users - create update delete
-
+IMPORTANT
+    User Role - UserId veld verwijderen uit zowel model als forms
 -----------------------------------------------------------------
 Authentication
     Inloggen
