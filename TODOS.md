@@ -1,20 +1,22 @@
 Schermen maken voor alle cruds
-ActivityTypes - update, delete
-Activities - create update delete
-Doctors - create update delete
-Users - create update delete
-User roles - create update delete
-Inloggen
-Uitloggen
+    Activities - create update delete
+    Doctors - create update delete
+    Users - create update delete
+    User roles - create update delete
 
-Login mogelijk maken
+-----------------------------------------------------------------
+Authentication
+    Inloggen
+    Uitloggen
+
+-----------------------------------------------------------------
 
 Page layouts definiëren
-Vakanties doorgeven page
-Login page
-Change account info page
-Create new user page
-Create new doctor page
-Create new person page
-Create new activity page
-planning page
+    Vakanties doorgeven page
+    Login page
+    Change account info page
+    Create new user page
+    Create new doctor page
+    Create new person page
+    Create new activity page
+    planning page
