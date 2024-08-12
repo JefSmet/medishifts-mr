@@ -1,5 +1,4 @@
 Schermen maken voor alle cruds
-    Activities - create update delete
     Doctors - create update delete
     Users - create update delete
 IMPORTANT
