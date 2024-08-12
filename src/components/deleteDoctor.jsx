@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import axios from 'axios';
-export default function DeleteActivityType({ id, onDelete }) {
-  const apiRoute = import.meta.env.VITE_API_ROUTE + '/activity_types';
+export default function DeleteDoctor({ id, onDelete }) {
+  const apiRoute = import.meta.env.VITE_API_ROUTE + '/doctors';
 
   const handleDelete = async () => {
     onDelete(true);

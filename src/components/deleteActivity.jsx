@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import axios from 'axios';
-export default function DeletePerson({ id, onDelete }) {
+export default function DeleteActivity({ id, onDelete }) {
   const apiRoute = import.meta.env.VITE_API_ROUTE + '/activities';
 
   const handleDelete = async () => {
