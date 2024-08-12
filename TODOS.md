@@ -1,8 +1,6 @@
-Schermen maken voor alle cruds
-    Doctors - create update delete
-    Users - create update delete
 IMPORTANT
     User Role - UserId veld verwijderen uit zowel model als forms
+    User - voeg de user_role_id field toe aan model en forms
 -----------------------------------------------------------------
 Authentication
     Inloggen
