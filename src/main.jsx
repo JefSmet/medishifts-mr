@@ -17,7 +17,7 @@ import { action as createActivityTypeAction } from './components/createActivityT
 import CreatePerson from './components/createPerson.jsx';
 import { action as createPersonAction } from './components/createPerson.jsx';
 // import PersonsOverview from './components/personsOverview.jsx';
-import UpdateUsers from './components/updateUsers.jsx';
+import UpdateUsers from './components/updatePersons.jsx';
 import UpdateActivityType from './components/updateActivityType.jsx';
 
 const router = createBrowserRouter(

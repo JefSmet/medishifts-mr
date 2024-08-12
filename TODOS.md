@@ -2,7 +2,6 @@ Schermen maken voor alle cruds
     Activities - create update delete
     Doctors - create update delete
     Users - create update delete
-    User roles - create update delete
 
 -----------------------------------------------------------------
 Authentication
@@ -19,4 +18,8 @@ Page layouts definiëren
     Create new doctor page
     Create new person page
     Create new activity page
+    Update user page
+    update doctor page
+    update person page
+    update activity page
     planning page
