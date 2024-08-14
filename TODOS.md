@@ -3,7 +3,6 @@ IMPORTANT
     User - voeg de user_role_id field toe aan model en forms
 -----------------------------------------------------------------
 Authentication
-    Inloggen
     Uitloggen
 
 -----------------------------------------------------------------
