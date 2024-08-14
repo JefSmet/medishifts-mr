@@ -19,7 +19,7 @@ import { action as createPersonAction } from './components/createPerson.jsx';
 // import PersonsOverview from './components/personsOverview.jsx';
 import UpdateUsers from './components/updatePersons.jsx';
 import UpdateActivityType from './components/updateActivityType.jsx';
-
+import Login from './components/login.jsx';
 const router = createBrowserRouter(
   createRoutesFromElements(
     <Route path="/" element={<Root />} errorElement={<ErrorPage />}>
@@ -30,7 +30,7 @@ const router = createBrowserRouter(
       />
       <Route
         path="dashboard/"
-        element={<UpdateActivityType />}
+        element={<Login />}
         action={createPersonAction}
       />
     </Route>,
