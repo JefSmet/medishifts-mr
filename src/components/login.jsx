@@ -9,6 +9,7 @@ export default function Login() {
     try {
       const response = await axios.post(apiRoute, object);
       if (response.status === 200) {
+        sessionStorage.setItem('user', JSON.stringify(response.data));
         window.location.href = '/';
       } else {
         alert(`Error: ${response.status} - ${response.statusText}`);
