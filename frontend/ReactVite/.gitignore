@@ -1,0 +1,4 @@
+# React Vite-specific
+/node_modules/
+/dist/
+*.env

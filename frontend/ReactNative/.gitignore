@@ -1,0 +1,6 @@
+# React Native-specific
+/node_modules/
+/android/
+/ios/
+/build/
+*.env

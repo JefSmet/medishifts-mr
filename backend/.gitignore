@@ -1,0 +1,5 @@
+# Node Express-specific
+/node_modules/
+/dist/
+.env
+*.log

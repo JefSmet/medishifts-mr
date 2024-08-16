@@ -1,0 +1,33 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "type": "node",
+      "request": "launch",
+      "name": "Launch Express Server",
+      "program": "${workspaceFolder}/backend/server.js",  // Change this to your entry point file
+      "restart": true,
+      "runtimeExecutable": "node",
+      "env": {
+        "NODE_ENV": "development"
+      },
+      "console": "integratedTerminal",
+      "internalConsoleOptions": "neverOpen",
+      "skipFiles": [
+        "<node_internals>/**"
+      ],
+      "outFiles": ["${workspaceFolder}/dist/**/*.js"]  // Change this if you are using TypeScript or a build process
+    },
+    {
+      "type": "pwa-chrome",
+      "request": "launch",
+      "name": "Vite App",
+      "url": "http://localhost:3000",
+      "webRoot": "${workspaceFolder}/frontend/ReactVite",
+      "breakOnLoad": true,
+      "sourceMaps": true,
+      "skipFiles": ["<node_internals>/**"],
+      "preLaunchTask": "npm: dev"
+    }
+  ]
+}
