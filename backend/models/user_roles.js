@@ -11,14 +11,6 @@ export default class user_roles extends Model {
           allowNull: false,
           primaryKey: true,
         },
-        user_id: {
-          type: DataTypes.UUID,
-          allowNull: false,
-          references: {
-            model: 'users',
-            key: 'person_id',
-          },
-        },
         role: {
           type: DataTypes.STRING(50),
           allowNull: false,

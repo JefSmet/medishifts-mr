@@ -22,6 +22,14 @@ export default class users extends Model {
           type: DataTypes.STRING(255),
           allowNull: false,
         },
+        user_role_id: {
+          type: DataTypes.UUID,
+          allowNull: false,
+          references: {
+            model: 'user_roles',
+            key: 'id',
+          },
+        },
       },
       {
         sequelize,
