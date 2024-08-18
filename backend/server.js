@@ -12,7 +12,7 @@ import sequelize from './config/database.js';
 import initBescoModels from './models/init-besco-models.js';
 import initModels from './models/init-models.js';
 
-// Load environment variables...
+// Load environment variables
 dotenv.config();
 
 // Initialize models
