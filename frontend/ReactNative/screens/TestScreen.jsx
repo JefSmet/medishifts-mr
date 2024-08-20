@@ -8,17 +8,30 @@ const LoginScreen = () => {
   const [password, setPassword] = useState('');
 
   const handleLogin = () => {
-    fetch(API_BASE_URL+'login', {
+    fetch(API_BASE_URL + 'login', {
       method: 'POST',
       headers: {
-        'Content-Type': 'application/json'
+        'Content-Type': 'application/json',
       },
-      body: JSON.stringify({username, password})
+      body: JSON.stringify({ username, password }),
     })
-      .then(response => response.json())
-      .then(data => console.log(data))
-      .catch(error => console.log(error));
+      .then(response => {
+        if (!response.ok) {
+          // Als de response niet ok is, gooi een error met de status tekst
+          return response.text().then(text => { 
+            throw new Error(text);
+          });
+        }
+        return response.json(); // Probeer alleen te parsen als het een geldige JSON-response is
+      })
+      .then(data => {
+        console.log(data);
+      })
+      .catch(error => {
+        console.log('Error:', error.message); // Log de error message
+      });
   };
+  
 
   return (
     <Layout style={styles.container}>
