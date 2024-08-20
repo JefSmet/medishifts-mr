@@ -44,7 +44,15 @@ export default class users extends Model {
             fields: [{ name: 'person_id' }],
           },
         ],
-      },
+        hooks: {
+          beforeCreate: (user) => {
+            user.password = crypto
+              .createHash('sha256')
+              .update(user.password)
+              .digest('hex');
+          },
+        },
+      }
     );
   }
 }
