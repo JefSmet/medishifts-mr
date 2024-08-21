@@ -136,7 +136,7 @@ function DaysGrid({ month, year, events, firstDayOfWeek = 1 }) {
       const isToday = currentDate.toDateString() === new Date().toDateString();
       const dayEvents = events.filter(
         (event) =>
-          new Date(event.datetime).toDateString() ===
+          new Date(event.begin_DT).toDateString() ===
           currentDate.toDateString(),
       );
 

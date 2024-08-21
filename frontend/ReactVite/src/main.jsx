@@ -12,7 +12,6 @@ import Werkrooster from './routes/werkrooster.jsx';
 import Root from './routes/root.jsx';
 // import Dashboard from './components/dashboard.jsx';
 import CreateActivityType from './components/createActivityType.jsx';
-import { loader as werkroosterLoader } from './routes/werkrooster.jsx';
 import { action as createActivityTypeAction } from './components/createActivityType.jsx';
 import CreatePerson from './components/createPerson.jsx';
 import { action as createPersonAction } from './components/createPerson.jsx';
@@ -23,11 +22,7 @@ import Login from './components/login.jsx';
 const router = createBrowserRouter(
   createRoutesFromElements(
     <Route path="/" element={<Root />} errorElement={<ErrorPage />}>
-      <Route
-        path="werkrooster/"
-        element={<Werkrooster />}
-        loader={werkroosterLoader}
-      />
+      <Route path="werkrooster/" element={<Werkrooster />} />
       <Route
         path="dashboard/"
         element={<Login />}
