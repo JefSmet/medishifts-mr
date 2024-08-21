@@ -1,7 +1,8 @@
 import axios from 'axios';
+import {API_BASE_URL} from '@env';
 
 const api = axios.create({
-  baseURL: 'http://your-api-url.com/api',
+  baseURL: API_BASE_URL,
 });
 
 const setAuthToken = async () => {

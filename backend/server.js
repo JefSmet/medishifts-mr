@@ -4,13 +4,15 @@ import cors from 'cors';
 import dotenv from 'dotenv';
 import express from 'express';
 import session from 'express-session';
-import passport from 'passport';
+import passport from './config/passport.js';
 import { Strategy as LocalStrategy } from 'passport-local';
 import { Op } from 'sequelize';
 import sequelizeBesco from './config/besco.js';
 import sequelize from './config/database.js';
 import initBescoModels from './models/init-besco-models.js';
 import initModels from './models/init-models.js';
+const jwt = require('jsonwebtoken');
+const secret = process.env.JWT_SECRET || 'your_jwt_secret';
 
 // Load environment variables
 dotenv.config();
@@ -32,7 +34,7 @@ app.use(
     secret: process.env.SESSION_SECRET,
     resave: false,
     saveUninitialized: false,
-  }),
+  })
 );
 
 app.use(passport.initialize());
@@ -60,8 +62,8 @@ passport.use(
       } catch (error) {
         return done(error);
       }
-    },
-  ),
+    }
+  )
 );
 
 passport.serializeUser((user, done) => done(null, user.person_id));
@@ -77,11 +79,51 @@ passport.deserializeUser((id, done) => {
  */
 
 // User authentication routes
-app.post('/login', passport.authenticate('local'), (req, res) => {
-  const userObject = req.user.get({ plain: true });
-  const { password, ...userWithoutPassword } = userObject;
-  res.json({ user: userWithoutPassword, message: 'Login successful' });
+app.post('/login', (req, res) => {
+  const { username, password } = req.body;
+
+  User.findOne({ where: { username } })
+    .then((user) => {
+      if (!user) {
+        return res.status(404).json({ usernameNotFound: 'username not found' });
+      }
+
+      const hashedInput = crypto
+        .createHash('sha256')
+        .update(password)
+        .digest('hex');
+
+      if (hashedInput === user.password) {
+        // Gebruiker gevonden, JWT token genereren
+        const payload = {
+          id: user.id,
+          name: user.name,
+        };
+
+        jwt.sign(
+          payload,
+          secret,
+          { expiresIn: '7d' }, // 7 dagen geldig
+          (err, token) => {
+            res.json({
+              success: true,
+              token: 'Bearer ' + token,
+            });
+          }
+        );
+      } else {
+        return res
+          .status(400)
+          .json({ passwordincorrect: 'Password incorrect' });
+      }
+    })
+    .catch((err) => res.status(400).json({ error: err.message }));
 });
+
+// Beveiligde route
+// app.get('/api/protected', passport.authenticate('jwt', { session: false }), (req, res) => {
+//   res.json({ message: 'You are authenticated!', user: req.user });
+// });
 
 app.get('/logout', (req, res) => {
   req.logout();
@@ -226,7 +268,11 @@ app.get('/activities/period/:startDate/:endDate', async (req, res) => {
       },
       include: [
         { model: models.persons, attributes: ['first_name', 'last_name'] },
-        { model: models.activity_types, attributes: ['name'], where: { name: { [Op.ne]: 'Verlof' } } },
+        {
+          model: models.activity_types,
+          attributes: ['name'],
+          where: { name: { [Op.ne]: 'Verlof' } },
+        },
       ],
       order: [
         ['begin_DT', 'ASC'],
@@ -257,7 +303,11 @@ app.get('/activities/:year/:month', async (req, res) => {
       },
       include: [
         { model: models.persons, attributes: ['first_name', 'last_name'] },
-        { model: models.activity_types, attributes: ['name'], where: { name: { [Op.ne]: 'Verlof' } } },
+        {
+          model: models.activity_types,
+          attributes: ['name'],
+          where: { name: { [Op.ne]: 'Verlof' } },
+        },
       ],
       order: [
         ['begin_DT', 'ASC'],
@@ -375,7 +425,9 @@ app.put('/activity_types/:id', async (req, res) => {
 
 app.delete('/activity_types/:id', async (req, res) => {
   try {
-    await models.activity_types.destroy({ where: { activity_type_id: req.params.id } });
+    await models.activity_types.destroy({
+      where: { activity_type_id: req.params.id },
+    });
     res.status(204).send('Activity type deleted');
   } catch (error) {
     console.error(error);
@@ -507,9 +559,13 @@ app.delete('/user_roles/:id', async (req, res) => {
 app.post('/persons-doctors', async (req, res) => {
   const transactionConst = await sequelize.transaction();
   try {
-    const person = await models.persons.create(req.body.person, { transaction: transactionConst });
+    const person = await models.persons.create(req.body.person, {
+      transaction: transactionConst,
+    });
     req.body.doctor.person_id = person.id;
-    const doctor = await models.doctors.create(req.body.doctor, { transaction: transactionConst });
+    const doctor = await models.doctors.create(req.body.doctor, {
+      transaction: transactionConst,
+    });
 
     await transactionConst.commit();
     res.status(201).json({ person, doctor });
