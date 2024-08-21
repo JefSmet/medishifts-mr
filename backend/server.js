@@ -11,7 +11,7 @@ import sequelizeBesco from './config/besco.js';
 import sequelize from './config/database.js';
 import initBescoModels from './models/init-besco-models.js';
 import initModels from './models/init-models.js';
-const jwt = require('jsonwebtoken');
+import jwt from 'jsonwebtoken';
 const secret = process.env.JWT_SECRET || 'your_jwt_secret';
 
 // Load environment variables
@@ -81,6 +81,7 @@ passport.deserializeUser((id, done) => {
 // User authentication routes
 app.post('/login', (req, res) => {
   const { username, password } = req.body;
+  const platform = req.headers['x-platform'];
 
   User.findOne({ where: { username } })
     .then((user) => {
@@ -100,24 +101,28 @@ app.post('/login', (req, res) => {
           name: user.name,
         };
 
-        jwt.sign(
-          payload,
-          secret,
-          { expiresIn: '7d' }, // 7 dagen geldig
-          (err, token) => {
-            res.json({
-              success: true,
-              token: 'Bearer ' + token,
-            });
-          }
-        );
+        let expiresIn;
+        if (platform === 'web') {
+          expiresIn = '2h'; // 2 uur voor web
+        } else if (platform === 'mobile') {
+          expiresIn = '7d'; // 7 dagen voor mobiel
+        } else {
+          expiresIn = '1h'; // Standaard, indien platform onbekend is
+        }
+
+        jwt.sign(payload, secret, { expiresIn }, (err, token) => {
+          res.json({
+            success: true,
+            token: 'Bearer ' + token,
+          });
+        });
       } else {
         return res
           .status(400)
           .json({ passwordincorrect: 'Password incorrect' });
       }
     })
-    .catch((err) => res.status(400).json({ error: err.message }));
+    .catch((err) => res.status(401).json({ error: err.message }));
 });
 
 // Beveiligde route

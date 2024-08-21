@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Layout, Input, Button, Text } from '@ui-kitten/components';
 import { StyleSheet, Platform } from 'react-native';
 import { API_BASE_URL } from '@env';
-import { api, setAuthToken } from '../utils/setAuthToken';
+import { api, setAuthToken } from '../utils/apiJWT';
 import { storeToken } from '../utils/tokenStorage';
 
 const LoginScreen = () => {
@@ -12,11 +12,18 @@ const LoginScreen = () => {
   const isWeb = Platform.OS === 'web';
 
   const handleLogin = async () => {
+    const platform = isWeb ? 'web' : 'mobile';
     try {
-      const response = await api.post(API_BASE_URL + '/login', {
-        username,
-        password,
-      });
+      const response = await api.post(
+        API_BASE_URL + 'login',
+        {
+          username,
+          password,
+        },
+        {
+          headers: { 'X-Platform': platform },
+        },
+      );
 
       if (response.data.success) {
         const token = response.data.token;
@@ -33,12 +40,16 @@ const LoginScreen = () => {
         } else {
           navigation.navigate('Dashboard'); // Voor mobiel: gebruik React Navigation
         }
-      } else {
-        setErrorMessage('Login mislukt: Onjuiste inloggegevens');
       }
     } catch (error) {
-      console.error(error);
-      setErrorMessage('Error: Er is iets misgegaan. Probeer het opnieuw.');
+      console.error(error.message);
+      if (error.response) {
+        error.response.status === 401
+          ? setErrorMessage('Login mislukt: Onjuiste inloggegevens')
+          : setErrorMessage('Er is iets misgegaan. Probeer het later opnieuw.');
+      } else {
+        setErrorMessage('Er is iets misgegaan. Probeer het later opnieuw.');
+      }
     }
   };
 
@@ -49,7 +60,7 @@ const LoginScreen = () => {
           Login
         </Text>
         {errorMessage ? (
-          <Text style={styles.errorText}>{errorMessage}</Text> // Error message displayed here
+          <Text style={styles.errorText}>{errorMessage}</Text>
         ) : null}
         <Input
           placeholder="Username"
