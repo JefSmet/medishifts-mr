@@ -1,29 +1,33 @@
 import React, { useState } from 'react';
 import { Layout, Input, Button, Text } from '@ui-kitten/components';
-import { StyleSheet, Dimensions } from 'react-native';
+import { StyleSheet, Platform } from 'react-native';
 import { API_BASE_URL } from '@env';
-import {api, setAuthToken} from '../utils/setAuthToken';
-import {storeToken} from '../utils/tokenStorage';
+import { api, setAuthToken } from '../utils/setAuthToken';
+import { storeToken } from '../utils/tokenStorage';
 
 const LoginScreen = () => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
+  const [errorMessage, setErrorMessage] = useState('');
   const isWeb = Platform.OS === 'web';
 
   const handleLogin = async () => {
     try {
       // Maak een login-aanroep naar je backend API
-      const response = await api.post('/login', { username, password });
+      const response = await api.post(API_BASE_URL + '/login', {
+        username,
+        password,
+      });
 
       if (response.data.success) {
         const token = response.data.token;
-        
+
         // Sla de token op in AsyncStorage (mobiel) of sessionStorage (web)
         await storeToken(token);
-        
+
         // Stel de token in voor toekomstige API-aanroepen
         setAuthToken(token);
-        
+
         // Navigeren naar een andere pagina of scherm na succesvolle login
         if (isWeb) {
           window.location.href = '/dashboard'; // Voor web: navigeer naar dashboard
@@ -31,11 +35,11 @@ const LoginScreen = () => {
           navigation.navigate('Dashboard'); // Voor mobiel: gebruik React Navigation
         }
       } else {
-        Alert.alert('Login mislukt', 'Onjuiste inloggegevens');
+        setErrorMessage('Login mislukt: Onjuiste inloggegevens');
       }
     } catch (error) {
       console.error(error);
-      Alert.alert('Error', 'Er is iets misgegaan. Probeer het opnieuw.');
+      setErrorMessage('Error: Er is iets misgegaan. Probeer het opnieuw.');
     }
   };
 
@@ -45,6 +49,9 @@ const LoginScreen = () => {
         <Text category="h1" style={styles.headerText}>
           Login
         </Text>
+        {errorMessage ? (
+          <Text style={styles.errorText}>{errorMessage}</Text> // Error message displayed here
+        ) : null}
         <Input
           placeholder="Username"
           value={username}
@@ -94,6 +101,11 @@ const styles = StyleSheet.create({
     marginTop: 20,
     backgroundColor: '#3366FF',
     borderColor: 'transparent',
+  },
+  errorText: {
+    color: 'red',
+    marginBottom: 20,
+    textAlign: 'center',
   },
 });
 
