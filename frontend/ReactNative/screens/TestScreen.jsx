@@ -13,7 +13,6 @@ const LoginScreen = () => {
 
   const handleLogin = async () => {
     try {
-      // Maak een login-aanroep naar je backend API
       const response = await api.post(API_BASE_URL + '/login', {
         username,
         password,
