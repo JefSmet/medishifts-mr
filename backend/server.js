@@ -83,7 +83,16 @@ app.post('/login', (req, res) => {
   const { username, password } = req.body;
   const platform = req.headers['x-platform'];
 
-  User.findOne({ where: { username } })
+  models.users
+    .findOne({
+      where: { username },
+      include: [
+        {
+          model: user_roles,
+          attributes: ['role'],
+        },
+      ],
+    })
     .then((user) => {
       if (!user) {
         return res.status(404).json({ usernameNotFound: 'username not found' });
@@ -99,6 +108,7 @@ app.post('/login', (req, res) => {
         const payload = {
           id: user.id,
           name: user.name,
+          role: user.user_role.role,
         };
 
         let expiresIn;
