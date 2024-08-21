@@ -35,10 +35,10 @@ const navigationItems = [
     id: 'werkrooster',
   },
   {
-    name: 'Vakantiebeheer',
-    href: '/vakantiebeheer',
+    name: 'Verlof aanvragen',
+    href: '/verlofAanvragen',
     icon: CalendarTravel,
-    id: 'vakantiebeheer',
+    id: 'verlofAanvragen',
   },
   {
     name: 'Dienstwissels',
