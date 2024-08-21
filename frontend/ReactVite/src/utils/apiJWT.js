@@ -1,9 +1,8 @@
 import axios from 'axios';
-import { API_BASE_URL } from '@env';
 import { getToken, removeToken } from './tokenStorage';
 
 const api = axios.create({
-  baseURL: API_BASE_URL,
+  baseURL: import.meta.env.VITE_API_ROUTE,
 });
 
 const setAuthToken = async () => {
@@ -16,8 +15,8 @@ const setAuthToken = async () => {
 };
 
 api.interceptors.response.use(
-  response => response,
-  async error => {
+  (response) => response,
+  async (error) => {
     if (error.response && error.response.status === 401) {
       await removeToken();
     }

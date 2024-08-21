@@ -1,21 +1,44 @@
-import axios from 'axios';
+import React, { useState } from 'react';
+import { api, setAuthToken } from '../utils/apiJWT';
 
-const apiRoute = import.meta.env.VITE_API_ROUTE + '/login';
+const apiRoute = import.meta.env.VITE_API_ROUTE;
 export default function Login() {
+  const [username, setUsername] = useState('');
+  const [password, setPassword] = useState('');
+  const [errorMessage, setErrorMessage] = useState('');
   async function handleSubmit(event) {
     event.preventDefault();
-    const formData = new FormData(event.target);
-    const object = Object.fromEntries(formData.entries());
     try {
-      const response = await axios.post(apiRoute, object);
-      if (response.status === 200) {
-        sessionStorage.setItem('user', JSON.stringify(response.data));
-        window.location.href = '/';
-      } else {
-        alert(`Error: ${response.status} - ${response.statusText}`);
+      const response = await api.post(apiRoute + 'login', {
+        username,
+        password,
+      });
+
+      if (response.data.success) {
+        const token = response.data.token;
+
+        // Sla de token op in AsyncStorage (mobiel) of sessionStorage (web)
+        await storeToken(token);
+
+        // Stel de token in voor toekomstige API-aanroepen
+        setAuthToken(token);
+
+        // Navigeren naar een andere pagina of scherm na succesvolle login
+        if (isWeb) {
+          window.location.href = '/dashboard'; // Voor web: navigeer naar dashboard
+        } else {
+          navigation.navigate('Dashboard'); // Voor mobiel: gebruik React Navigation
+        }
       }
     } catch (error) {
-      console.error(error);
+      console.error(error.message);
+      if (error.response) {
+        error.response.status === 401
+          ? setErrorMessage('Login mislukt: Onjuiste inloggegevens')
+          : setErrorMessage('Er is iets misgegaan. Probeer het later opnieuw.');
+      } else {
+        setErrorMessage('Er is iets misgegaan. Probeer het later opnieuw.');
+      }
     }
   }
   return (
@@ -32,23 +55,28 @@ export default function Login() {
           </h2>
         </div>
 
-        <div className="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
+        <div className="mt-5 sm:mx-auto sm:w-full sm:max-w-sm">
           <form onSubmit={handleSubmit} method="POST" className="space-y-6">
             <div>
+              {errorMessage && (
+                <p className="mb-2 text-center text-red-500">{errorMessage}</p>
+              )}
               <label
-                htmlFor="user_name"
+                htmlFor="username"
                 className="block text-sm font-medium leading-6 text-gray-900"
               >
                 Username
               </label>
               <div className="mt-2">
                 <input
-                  id="user_name"
-                  name="user_name"
-                  type="user_name"
+                  id="username"
+                  name="username"
+                  type="username"
                   required
-                  autoComplete="user_name"
+                  autoComplete="username"
                   className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                  onChange={(e) => setUsername(e.target.value)}
+                  value={username}
                 />
               </div>
             </div>
@@ -78,6 +106,8 @@ export default function Login() {
                   required
                   autoComplete="current-password"
                   className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                  onChange={(e) => setPassword(e.target.value)}
+                  value={password}
                 />
               </div>
             </div>

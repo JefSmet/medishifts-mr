@@ -4,7 +4,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 const isWeb = Platform.OS === 'web';
 
 // Functies om tokens op te slaan, op te halen en te verwijderen
-export const storeToken = async (token) => {
+export const storeToken = async token => {
   if (isWeb) {
     sessionStorage.setItem('jwtToken', token);
   } else {
