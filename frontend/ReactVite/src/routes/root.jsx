@@ -47,10 +47,10 @@ const navigationItems = [
     id: 'dienstwissels',
   },
   {
-    name: 'Rapporten',
-    href: '/rapporten',
+    name: 'Settings',
+    href: '/settings',
     icon: ChartPieIcon,
-    id: 'rapporten',
+    id: 'settings',
   },
 ];
 

@@ -20,6 +20,7 @@ import { action as createPersonAction } from './components/createPerson.jsx';
 import UpdateUsers from './components/updatePersons.jsx';
 import UpdateActivityType from './components/updateActivityType.jsx';
 import Login from './components/login.jsx';
+import Settings from './routes/settings.jsx';
 const router = createBrowserRouter(
   createRoutesFromElements(
     <Route path="/" element={<Root />} errorElement={<ErrorPage />}>
@@ -33,6 +34,7 @@ const router = createBrowserRouter(
         element={<Login />}
         action={createPersonAction}
       />
+      <Route path="settings/" element={<Settings />} />
     </Route>,
   ),
 );
