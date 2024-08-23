@@ -1,6 +1,5 @@
 
 # MediShifts
-Medical Emergency Care assistant
 
 # MediShifts Backend Project
 
