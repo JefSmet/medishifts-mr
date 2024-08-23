@@ -1,4 +1,4 @@
-# MedEcare Backend Project
+# MediShifts Backend Project
 
 ## I. Configuring Visual Studio Code for Optimal Debugging of a Node.js Express Project
 
@@ -19,7 +19,7 @@ Before you start, make sure you have the following software installed:
 Make sure your project has the following structure:
 
 ```bash
-medecare/backend/
+MediShifts/backend/
 ├── node_modules/
 ├── .eslintrc.json
 ├── .prettierrc
