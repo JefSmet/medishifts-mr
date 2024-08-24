@@ -88,7 +88,7 @@ app.post('/login', (req, res) => {
       where: { username },
       include: [
         {
-          model: user_roles,
+          model: models.user_roles,
           attributes: ['role'],
         },
       ],

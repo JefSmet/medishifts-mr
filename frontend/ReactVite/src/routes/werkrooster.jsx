@@ -29,7 +29,7 @@ export default function Werkrooster() {
   const [month, setMonth] = useState(new Date().getMonth() + 1);
   const [year, setYear] = useState(new Date().getFullYear());
   return (
-    <div className="flex flex-col">
+    <div className="mt-10 flex flex-col">
       <MonthYearSelector
         defaultMonth={month}
         defaultYear={year}
