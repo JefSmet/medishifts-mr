@@ -63,9 +63,9 @@ const administrationItems = [
   },
   {
     id: 2,
-    name: 'Kalenderabonnement',
-    href: '/kalenderabonnement',
-    initial: 'T',
+    name: 'addProfile',
+    href: '/addProfile',
+    initial: 'A',
   },
   {
     id: 3,
