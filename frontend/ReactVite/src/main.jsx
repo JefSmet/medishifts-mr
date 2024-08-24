@@ -21,6 +21,7 @@ import UpdateUsers from './components/updatePersons.jsx';
 import UpdateActivityType from './components/updateActivityType.jsx';
 import Login from './components/login.jsx';
 import AddProfile from './routes/addProfile.jsx';
+import Settings from './routes/settings.jsx';
 const router = createBrowserRouter(
   createRoutesFromElements(
     <Route path="/" element={<Root />} errorElement={<ErrorPage />}>
@@ -35,6 +36,7 @@ const router = createBrowserRouter(
         action={createPersonAction}
       />
       <Route path="addProfile/" element={<AddProfile />} />
+      <Route path="settings/" element={<Settings />} />
     </Route>,
   ),
 );
