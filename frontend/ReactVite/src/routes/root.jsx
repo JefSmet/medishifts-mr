@@ -59,13 +59,55 @@ const adminItems = [
     id: 1,
     name: 'Verlof aanvragen bekijken',
     href: '/verlofRequests',
-    initial: 'V',
+    initial: 'VAB',
   },
   {
     id: 2,
     name: 'Nieuwe gebruiker aanmaken',
     href: '/addProfile',
-    initial: 'N',
+    initial: 'NG',
+  },
+  {
+    id: 3,
+    name: 'Gebruiker aanpassen',
+    href: '/changeProfile',
+    initial: 'GA',
+  },
+  {
+    id: 4,
+    name: 'Nieuwe rol',
+    href: '/createRole',
+    initial: 'NR',
+  },
+  {
+    id: 5,
+    name: 'Rol aanpassen',
+    href: '/changeRole',
+    initial: 'RA',
+  },
+  {
+    id: 6,
+    name: 'Nieuwe activiteit',
+    href: '/createActivity',
+    initial: 'NA',
+  },
+  {
+    id: 7,
+    name: 'Activiteiten aanpassen',
+    href: '/changeActivities',
+    initial: 'AA',
+  },
+  {
+    id: 8,
+    name: 'Nieuwe planning',
+    href: '/createPlanning',
+    initial: 'NP',
+  },
+  {
+    id: 9,
+    name: 'Planning aanpassen',
+    href: '/changePlanning',
+    initial: 'PA',
   },
 ];
 

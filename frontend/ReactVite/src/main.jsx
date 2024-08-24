@@ -24,20 +24,22 @@ import AddProfile from './routes/addProfile.jsx';
 import Settings from './routes/settings.jsx';
 import VerlofAanvragen from './routes/verlofAanvragen.jsx';
 import VerlofRequests from './routes/verlofRequests.jsx';
+import ChangeProfile from './routes/changeProfile.jsx';
 const router = createBrowserRouter(
   createRoutesFromElements(
     <Route path="/" element={<Root />} errorElement={<ErrorPage />}>
-      <Route
-        path="werkrooster/"
-        element={<Werkrooster />}
-        loader={werkroosterLoader}
-      />
       <Route
         path="dashboard/"
         element={<Login />}
         action={createPersonAction}
       />
+      <Route
+        path="werkrooster/"
+        element={<Werkrooster />}
+        loader={werkroosterLoader}
+      />
       <Route path="addProfile/" element={<AddProfile />} />
+      <Route path="changeProfile" element={<ChangeProfile />} />
       <Route path="settings/" element={<Settings />} />
       <Route path="verlofAanvragen" element={<VerlofAanvragen />} />
       <Route path="verlofRequests" element={<VerlofRequests />} />
