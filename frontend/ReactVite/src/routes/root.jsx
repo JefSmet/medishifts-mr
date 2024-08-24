@@ -35,10 +35,10 @@ const navigationItems = [
     id: 'werkrooster',
   },
   {
-    name: 'Vakantiebeheer',
-    href: '/vakantiebeheer',
+    name: 'Verlof aanvragen',
+    href: '/verlofAanvragen',
     icon: CalendarTravel,
-    id: 'vakantiebeheer',
+    id: 'verlofAanvragen',
   },
   {
     name: 'Dienstwissels',
@@ -54,12 +54,12 @@ const navigationItems = [
   },
 ];
 
-const administrationItems = [
+const adminItems = [
   {
     id: 1,
-    name: 'Artsen',
-    href: '/artsen',
-    initial: 'H',
+    name: 'Verlof aanvragen bekijken',
+    href: '/verlofRequests',
+    initial: 'V',
   },
   {
     id: 2,
@@ -170,10 +170,10 @@ export default function Root() {
                     </li>
                     <li>
                       <div className="text-xs font-semibold leading-6 text-gray-400">
-                        Your teams
+                        Admin
                       </div>
                       <ul role="list" className="-mx-2 mt-2 space-y-1">
-                        {administrationItems.map((team) => (
+                        {adminItems.map((team) => (
                           <li key={team.id}>
                             <NavLink
                               to={team.href}
@@ -258,10 +258,10 @@ export default function Root() {
                 </li>
                 <li>
                   <div className="text-xs font-semibold leading-6 text-gray-400">
-                    Your teams
+                    Admin
                   </div>
                   <ul role="list" className="-mx-2 mt-2 space-y-1">
-                    {administrationItems.map((team) => (
+                    {adminItems.map((team) => (
                       <li key={team.id}>
                         <NavLink
                           to={team.href}

@@ -22,6 +22,8 @@ import UpdateActivityType from './components/updateActivityType.jsx';
 import Login from './components/login.jsx';
 import AddProfile from './routes/addProfile.jsx';
 import Settings from './routes/settings.jsx';
+import VerlofAanvragen from './routes/verlofAanvragen.jsx';
+import VerlofRequests from './routes/verlofRequests.jsx';
 const router = createBrowserRouter(
   createRoutesFromElements(
     <Route path="/" element={<Root />} errorElement={<ErrorPage />}>
@@ -37,6 +39,8 @@ const router = createBrowserRouter(
       />
       <Route path="addProfile/" element={<AddProfile />} />
       <Route path="settings/" element={<Settings />} />
+      <Route path="verlofAanvragen" element={<VerlofAanvragen />} />
+      <Route path="verlofRequests" element={<VerlofRequests />} />
     </Route>,
   ),
 );
