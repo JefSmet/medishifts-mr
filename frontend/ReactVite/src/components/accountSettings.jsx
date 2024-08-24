@@ -2,8 +2,11 @@ import { PencilIcon } from '@heroicons/react/24/solid';
 
 export default function AccountSettings() {
   return (
-    <div className="flex items-center justify-center">
-      <div className="w-full max-w-sm rounded-lg bg-white p-6 shadow-md">
+    <div className="flex min-h-screen items-center justify-center overflow-y-auto">
+      <div
+        className="w-full max-w-sm rounded-lg bg-white p-6 shadow-md"
+        style={{ marginTop: '-20vh' }}
+      >
         <h2 className="mb-4 text-lg font-semibold text-gray-900">
           Account Information
         </h2>

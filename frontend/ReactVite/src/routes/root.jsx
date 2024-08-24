@@ -40,12 +40,12 @@ const navigationItems = [
     icon: CalendarTravel,
     id: 'verlofAanvragen',
   },
-  {
-    name: 'Dienstwissels',
-    href: '/dienstwissels',
-    icon: CalendarFlow,
-    id: 'dienstwissels',
-  },
+  // {
+  //   name: 'Dienstwissels',
+  //   href: '/dienstwissels',
+  //   icon: CalendarFlow,
+  //   id: 'dienstwissels',
+  // },
   {
     name: 'Settings',
     href: '/settings',
@@ -63,21 +63,9 @@ const adminItems = [
   },
   {
     id: 2,
-    name: 'addProfile',
+    name: 'Nieuwe gebruiker aanmaken',
     href: '/addProfile',
-    initial: 'A',
-  },
-  {
-    id: 3,
-    name: 'Instellingen',
-    href: '/instellingen',
-    initial: 'W',
-  },
-  {
-    id: 4,
-    name: 'Help',
-    href: '/help',
-    initial: 'H',
+    initial: 'N',
   },
 ];
 
