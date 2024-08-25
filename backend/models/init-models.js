@@ -1,5 +1,4 @@
 import _sequelize from 'sequelize';
-import _Query from './Query.js';
 import _activities from './activities.js';
 import _activity_types from './activity_types.js';
 import _doctors from './doctors.js';
@@ -9,7 +8,6 @@ import _users from './users.js';
 const DataTypes = _sequelize.DataTypes;
 
 export default function initModels(sequelize) {
-  const Query = _Query.init(sequelize, DataTypes);
   const activities = _activities.init(sequelize, DataTypes);
   const activity_types = _activity_types.init(sequelize, DataTypes);
   const doctors = _doctors.init(sequelize, DataTypes);
@@ -29,7 +27,6 @@ export default function initModels(sequelize) {
   users.hasMany(user_roles, { foreignKey: 'user_id' });
 
   return {
-    Query,
     activities,
     activity_types,
     doctors,
