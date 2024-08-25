@@ -22,6 +22,11 @@ export default class users extends Model {
           type: DataTypes.STRING(255),
           allowNull: false,
         },
+        ics_token: {
+          type: DataTypes.STRING(100),
+          allowNull: true,
+          unique: true,
+        },
       },
       {
         sequelize,
