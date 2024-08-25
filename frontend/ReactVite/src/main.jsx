@@ -25,6 +25,8 @@ import Settings from './routes/settings.jsx';
 import VerlofAanvragen from './routes/verlofAanvragen.jsx';
 import VerlofRequests from './routes/verlofRequests.jsx';
 import ChangeProfile from './routes/changeProfile.jsx';
+// import CreateUserRole from './routes/createUserRole.jsx';
+
 const router = createBrowserRouter(
   createRoutesFromElements(
     <Route path="/" element={<Root />} errorElement={<ErrorPage />}>
@@ -41,8 +43,15 @@ const router = createBrowserRouter(
       <Route path="addProfile/" element={<AddProfile />} />
       <Route path="changeProfile" element={<ChangeProfile />} />
       <Route path="settings/" element={<Settings />} />
-      <Route path="verlofAanvragen" element={<VerlofAanvragen />} />
-      <Route path="verlofRequests" element={<VerlofRequests />} />
+      <Route path="verlofAanvragen/" element={<VerlofAanvragen />} />
+      <Route path="verlofRequests/" element={<VerlofRequests />} />
+      <Route path="changeProfile/" element={<ChangeProfile />} />
+      <Route path="createRole/" element={<ChangeProfile />} />
+      <Route path="changeRole/" element={<ChangeProfile />} />
+      <Route path="createActivity/" element={<ChangeProfile />} />
+      <Route path="changeActivities/" element={<ChangeProfile />} />
+      <Route path="createPlanning/" element={<ChangeProfile />} />
+      <Route path="changePlanning/" element={<ChangeProfile />} />
     </Route>,
   ),
 );

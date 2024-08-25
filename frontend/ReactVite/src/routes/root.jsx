@@ -6,9 +6,9 @@ import {
 } from '@headlessui/react';
 import {
   Bars3Icon,
-  ChartPieIcon,
   HomeIcon,
   XMarkIcon,
+  CogIcon,
 } from '@heroicons/react/24/outline';
 import { useState } from 'react';
 import { NavLink, Outlet, useLocation } from 'react-router-dom';
@@ -49,7 +49,7 @@ const navigationItems = [
   {
     name: 'Settings',
     href: '/settings',
-    icon: ChartPieIcon,
+    icon: CogIcon,
     id: 'settings',
   },
 ];
