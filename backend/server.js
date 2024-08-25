@@ -147,7 +147,7 @@ app.get('/logout', (req, res) => {
   req.logout();
 });
 
-app.get('/api/ics/:token', async (req, res) => {
+app.get('/ics/:token', async (req, res) => {
   const { token } = req.params;
 
   const user = await models.users.findOne({ where: { ics_token: token } });
@@ -162,7 +162,7 @@ app.get('/api/ics/:token', async (req, res) => {
   res.send(icsData);
 });
 
-app.get('/api/ics/all-doctors/:token', async (req, res) => {
+app.get('/ics/all-doctors/:token', async (req, res) => {
   const { token } = req.params;
 
   const user = await models.users.findOne({ where: { ics_token: token } });
@@ -184,7 +184,7 @@ app.get('/api/ics/all-doctors/:token', async (req, res) => {
 });
 
 app.get(
-  '/api/get-ics-token',
+  '/get-ics-token',
   passport.authenticate('jwt', { session: false }),
   async (req, res) => {
     const user = await models.users.findByPk(req.user.id);

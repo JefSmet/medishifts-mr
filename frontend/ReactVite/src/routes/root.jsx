@@ -40,12 +40,12 @@ const navigationItems = [
     icon: CalendarTravel,
     id: 'verlofAanvragen',
   },
-  // {
-  //   name: 'Dienstwissels',
-  //   href: '/dienstwissels',
-  //   icon: CalendarFlow,
-  //   id: 'dienstwissels',
-  // },
+  {
+    name: 'TEST',
+    href: '/test',
+    icon: CalendarTravel,
+    id: 'TEST',
+  },
   {
     name: 'Settings',
     href: '/settings',
