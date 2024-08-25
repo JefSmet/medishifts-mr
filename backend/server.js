@@ -74,6 +74,9 @@ passport.deserializeUser((id, done) => {
     .catch((err) => done(err));
 });
 
+function generateToken() {
+  return crypto.randomBytes(32).toString('hex');
+}
 /**
  * Route definitions
  */
@@ -143,6 +146,61 @@ app.post('/login', (req, res) => {
 app.get('/logout', (req, res) => {
   req.logout();
 });
+
+app.get('/api/ics/:token', async (req, res) => {
+  const { token } = req.params;
+
+  const user = await models.users.findOne({ where: { ics_token: token } });
+
+  if (!user) {
+    return res.status(404).send('User not found');
+  }
+
+  const icsData = await generateICS(models, user.id, req.query.activity_types);
+  res.setHeader('Content-Disposition', 'attachment; filename=calendar.ics');
+  res.setHeader('Content-Type', 'text/calendar');
+  res.send(icsData);
+});
+
+app.get('/api/ics/all-doctors/:token', async (req, res) => {
+  const { token } = req.params;
+
+  const user = await models.users.findOne({ where: { ics_token: token } });
+
+  if (!user) {
+    return res.status(404).send('User not found');
+  }
+
+  const icsData = await generateICSForAllDoctors(
+    models,
+    req.query.activity_types
+  );
+  res.setHeader(
+    'Content-Disposition',
+    'attachment; filename=all-doctors-calendar.ics'
+  );
+  res.setHeader('Content-Type', 'text/calendar');
+  res.send(icsData);
+});
+
+app.get(
+  '/api/get-ics-token',
+  passport.authenticate('jwt', { session: false }),
+  async (req, res) => {
+    const user = await models.users.findByPk(req.user.id);
+
+    if (!user) {
+      return res.status(404).send('User not found');
+    }
+
+    if (!user.ics_token) {
+      user.ics_token = generateToken();
+      await user.save();
+    }
+
+    res.json({ ics_token: user.ics_token });
+  }
+);
 
 // Admin route with role checking middleware
 app.get('/admin', checkUserRole('admin'), (req, res) => {
