@@ -5,7 +5,7 @@
       "type": "node",
       "request": "launch",
       "name": "Launch Express Server",
-      "program": "${workspaceFolder}/backend/server.js",  // Change this to your entry point file
+      "program": "${workspaceFolder}/backend/server.js", // Change this to your entry point file
       "restart": true,
       "runtimeExecutable": "node",
       "env": {
@@ -13,10 +13,8 @@
       },
       "console": "integratedTerminal",
       "internalConsoleOptions": "neverOpen",
-      "skipFiles": [
-        "<node_internals>/**"
-      ],
-      "outFiles": ["${workspaceFolder}/dist/**/*.js"]  // Change this if you are using TypeScript or a build process
+      "skipFiles": ["<node_internals>/**"],
+      "outFiles": ["${workspaceFolder}/dist/**/*.js"] // Change this if you are using TypeScript or a build process
     },
     {
       "type": "pwa-chrome",
@@ -28,6 +26,21 @@
       "sourceMaps": true,
       "skipFiles": ["<node_internals>/**"],
       "preLaunchTask": "npm: dev"
+    },
+    {
+      "type": "node",
+      "request": "launch",
+      "name": "Launch Server",
+      "program": "${workspaceFolder}/backend/server.js",
+      "cwd": "${workspaceFolder}",
+      "runtimeExecutable": "node",
+      "envFile": "${workspaceFolder}/backend/.env", // Specificeer het .env bestand
+      "console": "integratedTerminal",
+      "internalConsoleOptions": "neverOpen",
+      "sourceMaps": true,
+      "restart": true,
+      "port": 3001,
+      "skipFiles": ["<node_internals>/**"]
     }
   ]
 }

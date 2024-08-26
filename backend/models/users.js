@@ -1,4 +1,5 @@
 import _sequelize from 'sequelize';
+import crypto from 'crypto';
 const { Model, Sequelize } = _sequelize;
 
 export default class users extends Model {
@@ -33,7 +34,6 @@ export default class users extends Model {
         ics_token: {
           type: DataTypes.STRING(100),
           allowNull: true,
-          unique: true,
         },
       },
       {

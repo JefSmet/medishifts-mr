@@ -23,8 +23,12 @@ export default function initModels(sequelize) {
   persons.hasMany(doctors, { foreignKey: 'person_id' });
   users.belongsTo(persons, { foreignKey: 'person_id' });
   persons.hasOne(users, { foreignKey: 'person_id' });
-  user_roles.belongsTo(users, { foreignKey: 'user_id' });
-  users.hasMany(user_roles, { foreignKey: 'user_id' });
+
+  // Correct relationship setup
+  users.belongsTo(user_roles, {
+    foreignKey: 'user_role_id', // Field in the 'users' table
+    targetKey: 'id', // Field in the 'user_roles' table
+  });
 
   return {
     activities,

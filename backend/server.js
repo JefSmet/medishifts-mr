@@ -12,7 +12,8 @@ import sequelize from './config/database.js';
 import initBescoModels from './models/init-besco-models.js';
 import initModels from './models/init-models.js';
 import jwt from 'jsonwebtoken';
-const secret = process.env.JWT_SECRET || 'your_jwt_secret';
+import crypto from 'crypto';
+const secret = process.env.JWT_SECRET;
 
 // Load environment variables
 dotenv.config();
@@ -31,7 +32,7 @@ app.use(express.json());
 
 app.use(
   session({
-    secret: process.env.SESSION_SECRET,
+    secret: process.env.SESSION_SECRET || 'your_jwt_secret',
     resave: false,
     saveUninitialized: false,
   })
@@ -82,60 +83,62 @@ function generateToken() {
  */
 
 // User authentication routes
-app.post('/login', (req, res) => {
-  const { username, password } = req.body;
-  const platform = req.headers['x-platform'];
+app.post('/login', async (req, res) => {
+  try {
+    const { username, password } = req.body;
+    const platform = req.headers['x-platform'];
 
-  models.users
-    .findOne({
-      where: { username },
+    // Fetch the user along with their role, no alias is used
+    const user = await models.users.findOne({
+      where: { user_name: username },
       include: [
         {
-          model: models.user_roles,
+          model: models.user_roles, // Directly reference the model without alias
           attributes: ['role'],
         },
       ],
-    })
-    .then((user) => {
-      if (!user) {
-        return res.status(404).json({ usernameNotFound: 'username not found' });
-      }
+    });
 
-      const hashedInput = crypto
-        .createHash('sha256')
-        .update(password)
-        .digest('hex');
+    if (!user) {
+      return res.status(404).json({ usernameNotFound: 'Username not found' });
+    }
 
-      if (hashedInput === user.password) {
-        // Gebruiker gevonden, JWT token genereren
-        const payload = {
-          id: user.id,
-          name: user.name,
-          role: user.user_role.role,
-        };
+    const hashedInput = crypto
+      .createHash('sha256')
+      .update(password)
+      .digest('hex');
 
-        let expiresIn;
-        if (platform === 'web') {
-          expiresIn = '2h'; // 2 uur voor web
-        } else if (platform === 'mobile') {
-          expiresIn = '7d'; // 7 dagen voor mobiel
-        } else {
-          expiresIn = '1h'; // Standaard, indien platform onbekend is
-        }
+    if (hashedInput === user.password) {
+      const payload = {
+        id: user.person_id,
+        name: user.user_name,
+        role: user.user_roles ? user.user_roles.role : null, // Reference the default key
+      };
 
-        jwt.sign(payload, secret, { expiresIn }, (err, token) => {
-          res.json({
-            success: true,
-            token: 'Bearer ' + token,
-          });
-        });
+      let expiresIn;
+      if (platform === 'web') {
+        expiresIn = '2h';
+      } else if (platform === 'mobile') {
+        expiresIn = '7d';
       } else {
-        return res
-          .status(400)
-          .json({ passwordincorrect: 'Password incorrect' });
+        expiresIn = '1h';
       }
-    })
-    .catch((err) => res.status(401).json({ error: err.message }));
+
+      jwt.sign(payload, secret, { expiresIn }, (err, token) => {
+        if (err) {
+          return res.status(500).json({ error: 'Error generating token' });
+        }
+        res.json({
+          success: true,
+          token: 'Bearer ' + token,
+        });
+      });
+    } else {
+      return res.status(400).json({ passwordincorrect: 'Password incorrect' });
+    }
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
 });
 
 // Beveiligde route
