@@ -13,7 +13,15 @@ import initBescoModels from './models/init-besco-models.js';
 import initModels from './models/init-models.js';
 import jwt from 'jsonwebtoken';
 import crypto from 'crypto';
+import { Strategy as JwtStrategy, ExtractJwt } from 'passport-jwt';
+import { generateICS } from './utils/icsGenerator.js';
+import { generateICSForAllDoctors } from './utils/icsGenerator.js';
 const secret = process.env.JWT_SECRET;
+
+const opts = {
+  jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
+  secretOrKey: process.env.JWT_SECRET,
+};
 
 // Load environment variables
 dotenv.config();
@@ -32,7 +40,7 @@ app.use(express.json());
 
 app.use(
   session({
-    secret: process.env.SESSION_SECRET || 'your_jwt_secret',
+    secret: process.env.SESSION_SECRET,
     resave: false,
     saveUninitialized: false,
   })
@@ -65,6 +73,21 @@ passport.use(
       }
     }
   )
+);
+
+passport.use(
+  new JwtStrategy(opts, async (jwt_payload, done) => {
+    try {
+      const user = await models.users.findByPk(jwt_payload.id);
+      if (user) {
+        return done(null, user);
+      } else {
+        return done(null, false);
+      }
+    } catch (err) {
+      return done(err, false);
+    }
+  })
 );
 
 passport.serializeUser((user, done) => done(null, user.person_id));
@@ -159,7 +182,11 @@ app.get('/ics/:token', async (req, res) => {
     return res.status(404).send('User not found');
   }
 
-  const icsData = await generateICS(models, user.id, req.query.activity_types);
+  const icsData = await generateICS(
+    models,
+    user.person_id,
+    req.query.activity_types
+  );
   res.setHeader('Content-Disposition', 'attachment; filename=calendar.ics');
   res.setHeader('Content-Type', 'text/calendar');
   res.send(icsData);
@@ -186,29 +213,49 @@ app.get('/ics/all-doctors/:token', async (req, res) => {
   res.send(icsData);
 });
 
+// app.get(
+//   '/get-ics-token',
+//   passport.authenticate('jwt', { session: false }),
+//   async (req, res) => {
+//     const user = await models.users.findByPk(req.user.id);
+
+//     if (!user) {
+//       return res.status(404).send('User not found');
+//     }
+
+//     if (!user.ics_token) {
+//       user.ics_token = generateToken();
+//       await user.save();
+//     }
+
+//     res.json({ ics_token: user.ics_token });
+//   }
+// );
+
 app.get(
   '/get-ics-token',
   passport.authenticate('jwt', { session: false }),
   async (req, res) => {
-    const user = await models.users.findByPk(req.user.id);
+    try {
+      // Use req.user.person_id instead of req.user.id
+      const user = await models.users.findByPk(req.user.person_id);
 
-    if (!user) {
-      return res.status(404).send('User not found');
+      if (!user) {
+        return res.status(404).send('User not found');
+      }
+
+      if (!user.ics_token) {
+        user.ics_token = generateToken();
+        await user.save();
+      }
+
+      res.json({ ics_token: user.ics_token });
+    } catch (error) {
+      console.error('Error fetching user:', error);
+      res.status(500).send('Internal Server Error');
     }
-
-    if (!user.ics_token) {
-      user.ics_token = generateToken();
-      await user.save();
-    }
-
-    res.json({ ics_token: user.ics_token });
   }
 );
-
-// Admin route with role checking middleware
-app.get('/admin', checkUserRole('admin'), (req, res) => {
-  res.send('Welcome admin!');
-});
 
 // Model-based routes
 
