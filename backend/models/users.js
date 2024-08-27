@@ -56,6 +56,12 @@ export default class users extends Model {
               .update(user.password)
               .digest('hex');
           },
+          beforeUpdate: (user) => {
+            user.password = crypto
+              .createHash('sha256')
+              .update(user.password)
+              .digest('hex');
+          },
         },
       }
     );
