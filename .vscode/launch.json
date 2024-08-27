@@ -2,19 +2,59 @@
   "version": "0.2.0",
   "configurations": [
     {
-      "type": "node",
+      "name": "Launch Edge against localhost",
+      "type": "msedge",
+      "request": "launch",
+      "url": "http://localhost:5173",
+      "webRoot": "${workspaceFolder}/frontend/ReactVite/src",
+      "breakOnLoad": true,
+      "sourceMaps": true,
+      "sourceMapPathOverrides": {
+        "webpack:///src/*": "${webRoot}/*"
+      }
+    },
+    {
+      "name": "Debug Vite React App in Edge",
+      "type": "pwa-msedge",
+      "request": "launch",
+      "runtimeArgs": ["--remote-debugging-port=9222"],
+      "url": "http://localhost:5173",
+      "presentation": {
+        "hidden": false
+      },
+      "webRoot": "${workspaceFolder}/frontend/ReactVite/src"
+    },
+    {
+      "name": "Debug Vite React App in Edge headless",
+      "type": "vscode-edge-devtools.debug",
       "request": "launch",
       "name": "Launch Express Server",
       "program": "${workspaceFolder}/backend/server.js", // Change this to your entry point file
-      "restart": true,
-      "runtimeExecutable": "node",
-      "env": {
-        "NODE_ENV": "development"
+      "runtimeArgs": ["--headless", "--remote-debugging-port=9222"],
+      "url": "http://localhost:5173",
+      "presentation": {
+        "hidden": false
       },
+      "webRoot": "${workspaceFolder}/frontend/ReactVite/src"
+    },
+    {
+      "name": "Attach to Node.js",
+      "type": "node",
+      "request": "attach",
+      "port": 9229,
+      "restart": true,
+      "skipFiles": ["<node_internals>/**"]
+    },
+    {
+      "name": "Launch Node.js Program",
+      "type": "node",
+      "request": "launch",
+      "program": "${workspaceFolder}/backend/server.js",
+      "outFiles": ["${workspaceFolder}/backend/dist/**/*.js"],
       "console": "integratedTerminal",
       "internalConsoleOptions": "neverOpen",
       "skipFiles": ["<node_internals>/**"],
-      "outFiles": ["${workspaceFolder}/dist/**/*.js"] // Change this if you are using TypeScript or a build process
+      "outFiles": ["${workspaceFolder}/backend/dist/**/*.js"] // Change this if you are using TypeScript or a build process
     },
     {
       "type": "pwa-chrome",
@@ -26,33 +66,6 @@
       "sourceMaps": true,
       "skipFiles": ["<node_internals>/**"],
       "preLaunchTask": "npm: dev"
-    },
-    {
-      "type": "node",
-      "request": "launch",
-      "name": "Launch Server",
-      "program": "${workspaceFolder}/backend/server.js",
-      "cwd": "${workspaceFolder}",
-      "runtimeExecutable": "node",
-      "envFile": "${workspaceFolder}/backend/.env", // Specificeer het .env bestand
-      "console": "integratedTerminal",
-      "internalConsoleOptions": "neverOpen",
-      "sourceMaps": true,
-      "restart": true,
-      "port": 3001,
-      "skipFiles": ["<node_internals>/**"]
-    },
-    {
-      "name": "Launch Edge against localhost",
-      "type": "msedge",
-      "request": "launch",
-      "url": "http://localhost:5173",
-      "webRoot": "${workspaceFolder}/frontend/ReactVite/src",
-      "breakOnLoad": false,
-      "sourceMaps": true,
-      "sourceMapPathOverrides": {
-        "webpack:///src/*": "${webRoot}/*"
-      }
     }
   ]
 }
