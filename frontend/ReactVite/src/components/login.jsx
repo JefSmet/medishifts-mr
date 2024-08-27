@@ -1,11 +1,14 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { api, setAuthToken } from '../utils/apiJWT';
+import { storeToken } from '../utils/tokenStorage';
 
 const apiRoute = import.meta.env.VITE_API_ROUTE;
 export default function Login() {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
+  const [jwtToken, setjwtToken] = useState('');
+
   async function handleSubmit(event) {
     event.preventDefault();
     try {
@@ -18,17 +21,14 @@ export default function Login() {
         const token = response.data.token;
 
         // Sla de token op in AsyncStorage (mobiel) of sessionStorage (web)
-        await storeToken(token);
+
+        setjwtToken(token);
 
         // Stel de token in voor toekomstige API-aanroepen
         setAuthToken(token);
 
         // Navigeren naar een andere pagina of scherm na succesvolle login
-        if (isWeb) {
-          window.location.href = '/dashboard'; // Voor web: navigeer naar dashboard
-        } else {
-          navigation.navigate('Dashboard'); // Voor mobiel: gebruik React Navigation
-        }
+        window.location.href = '/dashboard'; // Voor web: navigeer naar dashboard
       }
     } catch (error) {
       console.error(error.message);
@@ -41,6 +41,12 @@ export default function Login() {
       }
     }
   }
+  useEffect(() => {
+    if (jwtToken) {
+      // localStorage.setItem('jwtToken', jwtToken);
+      storeToken(jwtToken);
+    }
+  }, [jwtToken]);
   return (
     <>
       <div className="flex min-h-full flex-1 flex-col justify-center px-6 lg:px-8">

@@ -41,6 +41,18 @@
       "restart": true,
       "port": 3001,
       "skipFiles": ["<node_internals>/**"]
+    },
+    {
+      "name": "Launch Edge against localhost",
+      "type": "msedge",
+      "request": "launch",
+      "url": "http://localhost:5173",
+      "webRoot": "${workspaceFolder}/frontend/ReactVite/src",
+      "breakOnLoad": false,
+      "sourceMaps": true,
+      "sourceMapPathOverrides": {
+        "webpack:///src/*": "${webRoot}/*"
+      }
     }
   ]
 }

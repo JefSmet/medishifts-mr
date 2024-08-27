@@ -3,7 +3,7 @@ import { Layout, Input, Button, Text } from '@ui-kitten/components';
 import { StyleSheet, Platform } from 'react-native';
 import { API_BASE_URL } from '@env';
 import { api, setAuthToken } from '../utils/apiJWT';
-import { storeToken } from '../utils/tokenStorage';
+import { storeToken } from '../utils/tokenStorage.js';
 
 const Login = () => {
   const [username, setUsername] = useState('');

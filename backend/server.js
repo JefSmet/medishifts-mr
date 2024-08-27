@@ -93,6 +93,10 @@ app.post('/login', async (req, res) => {
           model: models.user_roles, // Directly reference the model without alias
           attributes: ['role'],
         },
+        {
+          model: models.persons,
+          attributes: ['first_name', 'last_name'],
+        },
       ],
     });
 
@@ -108,8 +112,10 @@ app.post('/login', async (req, res) => {
     if (hashedInput === user.password) {
       const payload = {
         id: user.person_id,
-        name: user.user_name,
-        role: user.user_roles ? user.user_roles.role : null, // Reference the default key
+        username: user.user_name,
+        firstName: user.person.first_name,
+        lastName: user.person.last_name,
+        role: user.user_role ? user.user_role.role : null, // Reference the default key
       };
 
       let expiresIn;
