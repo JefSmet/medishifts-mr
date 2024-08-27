@@ -53,7 +53,7 @@ export default class activities extends Model {
             fields: [{ name: 'id' }],
           },
         ],
-      },
+      }
     );
   }
 }

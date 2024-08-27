@@ -53,6 +53,7 @@
       "outFiles": ["${workspaceFolder}/backend/dist/**/*.js"],
       "console": "integratedTerminal",
       "internalConsoleOptions": "neverOpen",
+      "envFile": "${workspaceFolder}/backend/.env",
       "skipFiles": ["<node_internals>/**"],
       "outFiles": ["${workspaceFolder}/backend/dist/**/*.js"] // Change this if you are using TypeScript or a build process
     },

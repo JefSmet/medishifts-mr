@@ -27,7 +27,7 @@ export default function Werkrooster() {
         );
 
         const response = await axios.get(
-          `${apiRoute}${startWeekBefore.toISOString().slice(0, 10)}/${endWeekAfter.toISOString().slice(0, 10)}`,
+          `${apiRoute}${startWeekBefore.toISOString().slice(0, 10)}/${endWeekAfter.toISOString().slice(0, 10)}/1`,
         );
         setActivities(response.data);
       } catch (error) {

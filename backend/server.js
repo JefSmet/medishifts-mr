@@ -452,6 +452,45 @@ app.get('/activities/:year/:month', async (req, res) => {
     res.status(500).send('Internal Server Error');
   }
 });
+app.get('/activities/period/:start/:end/:isWork/', async (req, res) => {
+  const { start, end, isWork } = req.params;
+
+  try {
+    // Converteer isWork naar een boolean
+    const isWorkBoolean = isWork === 'true';
+
+    const startDate = new Date(start - 1, 1);
+    const endDate = new Date(end, 0);
+    endDate.setHours(23, 59, 59, 999); // Zorg ervoor dat de einddatum correct is ingesteld
+
+    const activities = await models.activities.findAll({
+      where: {
+        begin_DT: { [Op.gte]: start },
+        end_DT: { [Op.lte]: end },
+        status: 'OK',
+      },
+      include: [
+        { model: models.persons, attributes: ['first_name', 'last_name'] },
+        {
+          model: models.activity_types,
+          attributes: ['name'],
+          where: { isWork: isWork },
+        },
+      ],
+      order: [
+        ['begin_DT', 'ASC'],
+        [models.activity_types, 'name', 'ASC'],
+        [models.persons, 'last_name', 'ASC'],
+        [models.persons, 'first_name', 'ASC'],
+      ],
+    });
+
+    res.json(activities);
+  } catch (error) {
+    console.error(error);
+    res.status(500).send('Internal Server Error');
+  }
+});
 
 app.get('/activities/:id', async (req, res) => {
   try {
