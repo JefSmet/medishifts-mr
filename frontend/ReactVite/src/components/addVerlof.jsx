@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import MonthView from './monthCalendar';
+import VerlofCalendar from './verlofCalendar';
 import MonthYearSelector from './MonthYearSelector';
 import axios from 'axios';
 import { parseJwt } from '../utils/tokenStorage';
@@ -111,8 +111,10 @@ export default function AddVerlof() {
           `${import.meta.env.VITE_API_ROUTE}activities`,
           {
             begin_DT: begin_DT.toISOString(),
-            eind_DT: eind_DT.toISOString(),
+            end_DT: eind_DT.toISOString(),
             activity_type_id: verlofId,
+            person_id: personId,
+            status: 'AV',
           },
         );
         console.log(
@@ -131,6 +133,38 @@ export default function AddVerlof() {
         error,
       );
       // Optioneel: je kunt hier ook een algemene foutmelding tonen
+    }
+  }
+
+  async function handleDelete(e) {
+    e.preventDefault();
+
+    const newErrors = {};
+
+    // Validatie van startDate
+    if (!startDate) {
+      newErrors.startDate = 'Startdatum moet worden ingevuld.';
+    }
+
+    // Validatie van endDate
+    if (!endDate) {
+      setEndDate(startDate); // Als einddatum leeg is, stel deze gelijk aan startdatum
+    }
+
+    if (Object.keys(newErrors).length > 0) {
+      setErrors(newErrors);
+      return;
+    }
+    try {
+      const response = await axios.delete(
+        `${import.meta.env.VITE_API_ROUTE}activities/verlof/${personId}/${startDate}/${endDate}`,
+      );
+      console.log('Verlof verwijderd:', response.data);
+    } catch (error) {
+      console.error(
+        'Er is een fout opgetreden bij het verwijderen van verlof:',
+        error,
+      );
     }
   }
 
@@ -225,9 +259,10 @@ export default function AddVerlof() {
         <div className="mt-6 flex items-center justify-end gap-x-6">
           <button
             type="button"
-            className="text-sm font-semibold leading-6 text-gray-900"
+            onClick={handleDelete}
+            className="rounded-md bg-red-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-red-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-red-600"
           >
-            Annuleren
+            Verwijderen
           </button>
           <button
             type="submit"
@@ -246,7 +281,7 @@ export default function AddVerlof() {
             setYear(year);
           }}
         />
-        <MonthView month={month} year={year} events={activities} />
+        <VerlofCalendar month={month} year={year} events={activities} />
       </div>
     </>
   );

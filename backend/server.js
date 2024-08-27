@@ -428,7 +428,6 @@ app.get('/activities/:year/:month', async (req, res) => {
       where: {
         begin_DT: { [Op.gte]: startDate },
         end_DT: { [Op.lte]: endDate },
-        status: 'OK',
       },
       include: [
         { model: models.persons, attributes: ['first_name', 'last_name'] },
@@ -467,7 +466,6 @@ app.get('/activities/period/:start/:end/:isWork/', async (req, res) => {
       where: {
         begin_DT: { [Op.gte]: start },
         end_DT: { [Op.lte]: end },
-        status: 'OK',
       },
       include: [
         { model: models.persons, attributes: ['first_name', 'last_name'] },
@@ -535,6 +533,22 @@ app.delete('/activities/:id', async (req, res) => {
   try {
     await models.activities.destroy({ where: { activity_id: req.params.id } });
     res.status(204).send('Activity deleted');
+  } catch (error) {
+    console.error(error);
+    res.status(500).send('Internal Server Error');
+  }
+});
+app.delete('/activities/verlof/:personId/:start/:end', async (req, res) => {
+  try {
+    await models.activities.destroy({
+      where: {
+        person_id: req.params.personId,
+        begin_DT: {
+          [Op.between]: [req.params.start, req.params.end],
+        },
+      },
+    });
+    res.status(204).send('Activities deleted');
   } catch (error) {
     console.error(error);
     res.status(500).send('Internal Server Error');

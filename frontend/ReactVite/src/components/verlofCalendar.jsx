@@ -107,17 +107,20 @@ function WeekdaysHeader({ month, year, firstDayOfWeek = 1 }) {
 function DaysGrid({ month, year, events, firstDayOfWeek = 1 }) {
   const [days, setDays] = useState([]);
   const [selectedDay, setSelectedDay] = useState(null);
+  const [selectedEvents, setSelectedEvents] = useState([]);
 
   const handleDayClick = (day) => {
     if (selectedDay) {
       selectedDay.isSelected = false;
       if (selectedDay === day) {
         setSelectedDay(null);
+        setSelectedEvents([]);
         return;
       }
     }
     day.isSelected = true;
     setSelectedDay(day);
+    setSelectedEvents(day.events);
   };
 
   useEffect(() => {
@@ -151,57 +154,9 @@ function DaysGrid({ month, year, events, firstDayOfWeek = 1 }) {
     }
     setDays(dayList);
   }, [month, year, events]);
+
   return (
-    <div className="flex bg-calendar-gridLines text-xs leading-6 text-calendar-activeMonth-text lg:flex-auto">
-      {/* desktop */}
-      <div className="hidden w-full lg:grid lg:grid-cols-7 lg:grid-rows-6 lg:gap-px">
-        {days.map((day) => (
-          <div
-            key={day.date}
-            className={classNames(
-              day.isCurrentMonth
-                ? 'bg-calendar-activeMonth-bg'
-                : 'bg-calendar-inActiveMonth-bg text-calendar-inActiveMonth-text',
-              'relative px-3 py-2',
-            )}
-          >
-            <time
-              dateTime={day.date}
-              className={
-                day.isToday
-                  ? 'flex h-6 w-6 items-center justify-center rounded-full bg-calendar-daysGrid-today-bg font-semibold text-calendar-daysGrid-today-text'
-                  : undefined
-              }
-            >
-              {day.date.split('-').pop().replace(/^0/, '')}
-            </time>
-            {day.events.length > 0 && (
-              <ol className="mt-2">
-                {day.events.map((event) => (
-                  <li key={event.id}>
-                    <div className="group flex">
-                      <p className="flex-auto truncate font-medium text-calendar-events-textLeft">
-                        {event.activity_type.name}: {event.person.last_name}
-                      </p>
-                      {/* <time
-                        dateTime={event.datetime}
-                        className="ml-3 hidden flex-none text-calendar-events-textRight xl:block"
-                      >
-                        {event.time}
-                      </time> */}
-                    </div>
-                  </li>
-                ))}
-                {/* {day.events.length > 3 && (
-                  <li className="text-calendar-events-textOverflow">
-                    + {day.events.length - 3} more
-                  </li>
-                )} */}
-              </ol>
-            )}
-          </div>
-        ))}
-      </div>
+    <div className="flex flex-col bg-calendar-gridLines text-xs leading-6 text-calendar-activeMonth-text lg:flex-auto">
       {/* Mobile */}
       <div className="isolate grid w-full grid-cols-7 grid-rows-6 gap-px lg:hidden">
         {days.map((day) => (
@@ -262,10 +217,69 @@ function DaysGrid({ month, year, events, firstDayOfWeek = 1 }) {
           </button>
         ))}
       </div>
+      {/* Event List for Mobile */}
+      {selectedDay && selectedEvents.length > 0 && (
+        <div className="bg-white p-4 lg:mt-4 lg:hidden">
+          <h3 className="text-lg font-semibold text-gray-900">
+            Shiften op{' '}
+            {new Intl.DateTimeFormat('nl-be', {
+              day: 'numeric',
+              month: 'long',
+            }).format(new Date(selectedDay.date))}
+          </h3>
+          <ul className="mt-2 space-y-1">
+            {selectedEvents.map((event) => (
+              <li key={event.id} className="text-sm text-gray-700">
+                {event.activity_type.name}: {event.person.last_name}
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
+      {/* desktop */}
+      <div className="hidden w-full lg:grid lg:grid-cols-7 lg:grid-rows-6 lg:gap-px">
+        {days.map((day) => (
+          <div
+            key={day.date}
+            className={classNames(
+              day.isCurrentMonth
+                ? 'bg-calendar-activeMonth-bg'
+                : 'bg-calendar-inActiveMonth-bg text-calendar-inActiveMonth-text',
+              'relative px-3 py-2',
+            )}
+          >
+            <time
+              dateTime={day.date}
+              className={
+                day.isToday
+                  ? 'flex h-6 w-6 items-center justify-center rounded-full bg-calendar-daysGrid-today-bg font-semibold text-calendar-daysGrid-today-text'
+                  : undefined
+              }
+            >
+              {day.date.split('-').pop().replace(/^0/, '')}
+            </time>
+            {day.events.length > 0 && (
+              <ol className="mt-2">
+                {day.events.map((event) => (
+                  <li key={event.id}>
+                    <div className="group flex">
+                      <p className="flex-auto truncate font-medium text-calendar-events-textLeft">
+                        {event.activity_type.name}: {event.person.last_name}{' '}
+                        {event.status}
+                      </p>
+                    </div>
+                  </li>
+                ))}
+              </ol>
+            )}
+          </div>
+        ))}
+      </div>
     </div>
   );
 }
-function MonthView({
+
+function VerlofCalendar({
   month = new Date().getMonth() + 1,
   year = new Date().getFullYear(),
   events = [],
@@ -290,4 +304,4 @@ function MonthView({
     </div>
   );
 }
-export default MonthView;
+export default VerlofCalendar;
