@@ -25,24 +25,36 @@ import Settings from './routes/settings.jsx';
 import VerlofAanvragen from './routes/verlofAanvragen.jsx';
 import VerlofRequests from './routes/verlofRequests.jsx';
 import Test from './routes/test.jsx';
+import Dashboard from './components/dashboard.jsx';
+import PrivateRoute from './components/privateRoute.jsx';
+
 const router = createBrowserRouter(
   createRoutesFromElements(
     <Route path="/" element={<Root />} errorElement={<ErrorPage />}>
       <Route
         path="werkrooster/"
-        element={<Werkrooster />}
-        loader={werkroosterLoader}
+        element={<PrivateRoute component={Werkrooster} />}
       />
       <Route
         path="dashboard/"
-        element={<Login />}
+        element={<PrivateRoute component={Dashboard} />}
         action={createPersonAction}
       />
-      <Route path="addProfile/" element={<AddProfile />} />
-      <Route path="settings/" element={<Settings />} />
-      <Route path="verlofAanvragen" element={<VerlofAanvragen />} />
-      <Route path="verlofRequests" element={<VerlofRequests />} />
-      <Route path="test" element={<Test />} />
+      <Route
+        path="addProfile/"
+        element={<PrivateRoute component={AddProfile} />}
+      />
+      <Route path="settings/" element={<PrivateRoute component={Settings} />} />
+      <Route
+        path="verlofAanvragen"
+        element={<PrivateRoute component={VerlofAanvragen} />}
+      />
+      <Route
+        path="verlofRequests"
+        element={<PrivateRoute component={VerlofRequests} />}
+      />
+      <Route path="test" element={<PrivateRoute component={Test} />} />
+      <Route path="login" element={<Login />} />
     </Route>,
   ),
 );
