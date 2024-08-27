@@ -177,26 +177,26 @@ function DaysGrid({ month, year, events, firstDayOfWeek = 1 }) {
             </time>
             {day.events.length > 0 && (
               <ol className="mt-2">
-                {day.events.slice(0, 3).map((event) => (
+                {day.events.map((event) => (
                   <li key={event.id}>
                     <div className="group flex">
                       <p className="flex-auto truncate font-medium text-calendar-events-textLeft">
-                        {event.name}
+                        {event.activity_type.name}: {event.person.last_name}
                       </p>
-                      <time
+                      {/* <time
                         dateTime={event.datetime}
                         className="ml-3 hidden flex-none text-calendar-events-textRight xl:block"
                       >
                         {event.time}
-                      </time>
+                      </time> */}
                     </div>
                   </li>
                 ))}
-                {day.events.length > 3 && (
+                {/* {day.events.length > 3 && (
                   <li className="text-calendar-events-textOverflow">
                     + {day.events.length - 3} more
                   </li>
-                )}
+                )} */}
               </ol>
             )}
           </div>

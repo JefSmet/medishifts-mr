@@ -2,6 +2,11 @@ import ics from 'ics';
 import { Op } from 'sequelize';
 
 export const generateICS = async (models, userId, activityTypes) => {
+  // Zorg ervoor dat activityTypes een array is
+  if (typeof activityTypes === 'string') {
+    activityTypes = activityTypes.split(','); // Als het een string is, splits deze dan in een array
+  }
+
   const activities = await models.activities.findAll({
     where: { person_id: userId, activity_type_id: activityTypes },
     include: [{ model: models.activity_types }],
@@ -10,14 +15,14 @@ export const generateICS = async (models, userId, activityTypes) => {
   const events = activities.map((activity) => ({
     title: activity.activity_type.name,
     start: [
-      activity.startDate.getFullYear(),
-      activity.startDate.getMonth() + 1,
-      activity.startDate.getDate(),
+      activity.begin_DT.getFullYear(),
+      activity.begin_DT.getMonth() + 1,
+      activity.begin_DT.getDate(),
     ],
     end: [
-      activity.endDate.getFullYear(),
-      activity.endDate.getMonth() + 1,
-      activity.endDate.getDate(),
+      activity.end_DT.getFullYear(),
+      activity.end_DT.getMonth() + 1,
+      activity.end_DT.getDate(),
     ],
     description: activity.description,
   }));
@@ -70,11 +75,15 @@ export const generateICSForAllDoctors = async (
   startDate,
   endDate
 ) => {
-  // If no startDate or endDate is provided, default to the current year
-  const currentYear = new Date().getFullYear();
+  // Zorg ervoor dat activityTypes een array is
+  if (typeof activityTypes === 'string') {
+    activityTypes = activityTypes.split(','); // Als het een string is, splits deze dan in een array
+  }
 
-  const start = startDate ? new Date(startDate) : new Date(currentYear, 0, 1); // January 1st of the current year
-  const end = endDate ? new Date(endDate) : new Date(currentYear, 11, 31); // December 31st of the current year
+  // Als geen startDate of endDate is opgegeven, gebruik dan de huidige jaargrenzen
+  const currentYear = new Date().getFullYear();
+  const start = startDate ? new Date(startDate) : new Date(currentYear, 0, 1);
+  const end = endDate ? new Date(endDate) : new Date(currentYear, 11, 31);
 
   const activities = await models.activities.findAll({
     where: {

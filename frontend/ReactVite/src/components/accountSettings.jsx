@@ -12,26 +12,6 @@ export default function AccountSettings() {
         </h2>
         <form>
           <div className="space-y-3">
-            {/* Profile Picture Section */}
-            <div className="mb-3 flex items-center justify-center">
-              <div className="relative">
-                <img
-                  className="h-20 w-20 rounded-full"
-                  src="https://via.placeholder.com/150"
-                  alt="Current Profile"
-                />
-                <label
-                  htmlFor="file-upload"
-                  className="absolute bottom-0 right-0 cursor-pointer rounded-full bg-indigo-600 p-1.5"
-                  style={{ backgroundColor: '#6366F1' }}
-                >
-                  <PencilIcon className="h-4 w-4 text-white" />
-                </label>
-                <input id="file-upload" type="file" className="hidden" />
-              </div>
-            </div>
-
-            {/* Other form fields */}
             <div>
               <label className="block text-sm font-medium text-gray-700">
                 Username

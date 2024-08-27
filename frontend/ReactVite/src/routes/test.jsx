@@ -1,5 +1,5 @@
-import MySchedule from '../components/MySchedule';
+import IcsGenerator from '../components/icsGenerator';
 
 export default function Test() {
-  return <MySchedule />;
+  return <IcsGenerator />;
 }
