@@ -6,7 +6,7 @@
       "type": "msedge",
       "request": "launch",
       "url": "http://localhost:5173",
-      "webRoot": "${workspaceFolder}/src",
+      "webRoot": "${workspaceFolder}/frontend/ReactVite/src",
       "breakOnLoad": true,
       "sourceMaps": true,
       "sourceMapPathOverrides": {
@@ -22,7 +22,7 @@
       "presentation": {
         "hidden": false
       },
-      "webRoot": "${workspaceFolder}/src"
+      "webRoot": "${workspaceFolder}/frontend/ReactVite/src"
     },
     {
       "name": "Debug Vite React App in Edge headless",
@@ -35,7 +35,7 @@
       "presentation": {
         "hidden": false
       },
-      "webRoot": "${workspaceFolder}/src"
+      "webRoot": "${workspaceFolder}/frontend/ReactVite/src"
     },
     {
       "name": "Attach to Node.js",
@@ -49,12 +49,12 @@
       "name": "Launch Node.js Program",
       "type": "node",
       "request": "launch",
-      "program": "${workspaceFolder}/server.js",
-      "outFiles": ["${workspaceFolder}/dist/**/*.js"],
+      "program": "${workspaceFolder}/backend/server.js",
+      "outFiles": ["${workspaceFolder}/backend/dist/**/*.js"],
       "console": "integratedTerminal",
       "internalConsoleOptions": "neverOpen",
       "skipFiles": ["<node_internals>/**"],
-      "outFiles": ["${workspaceFolder}/dist/**/*.js"] // Change this if you are using TypeScript or a build process
+      "outFiles": ["${workspaceFolder}/backend/dist/**/*.js"] // Change this if you are using TypeScript or a build process
     },
     {
       "type": "pwa-chrome",
