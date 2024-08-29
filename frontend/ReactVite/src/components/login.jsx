@@ -52,7 +52,7 @@ export default function Login() {
       <div className="flex min-h-full flex-1 flex-col justify-center px-6 lg:px-8">
         <div className="sm:mx-auto sm:w-full sm:max-w-sm">
           <img
-            alt="Your Company"
+            alt="Medshifts"
             src="src/icons/logo-az-monica.svg"
             className="mx-auto mt-0 h-60 w-auto"
           />
