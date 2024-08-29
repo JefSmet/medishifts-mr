@@ -15,10 +15,22 @@ export default class activity_types extends Model {
           type: DataTypes.STRING(255),
           allowNull: false,
         },
+        start_time: {
+          type: DataTypes.TIME,
+          allowNull: false,
+        },
+        minutes: {
+          type: DataTypes.INTEGER,
+          allowNull: false,
+        },
         isWork: {
           type: DataTypes.BOOLEAN,
           allowNull: false,
           defaultValue: true,
+        },
+        sortorder: {
+          type: DataTypes.INTEGER,
+          allowNull: true,
         },
       },
       {
@@ -33,8 +45,13 @@ export default class activity_types extends Model {
             unique: true,
             fields: [{ name: 'id' }],
           },
+          {
+            name: 'IxSortOrder',
+            unique: false,
+            fields: [{ name: 'sortorder' }],
+          },
         ],
-      },
+      }
     );
   }
 }

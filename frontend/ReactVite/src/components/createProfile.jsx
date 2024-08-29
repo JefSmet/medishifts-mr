@@ -134,7 +134,7 @@ export default function FullProfileForm() {
               }}
               className={`cursor-pointer p-2 ${selectedDoctorId === doctor.id ? 'bg-indigo-100' : ''}`}
             >
-              {doctor.person.last_name} {doctor.person.first_name} -{' '}
+              {/* {doctor.person.last_name} {doctor.person.first_name} -{' '} */}
               {doctor.qualification_name}
             </li>
           ))}

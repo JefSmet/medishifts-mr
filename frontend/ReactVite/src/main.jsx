@@ -26,6 +26,7 @@ import VerlofRequests from './routes/verlofRequests.jsx';
 import Test from './routes/test.jsx';
 import Dashboard from './components/dashboard.jsx';
 import PrivateRoute from './components/privateRoute.jsx';
+import Planning from './routes/planning.jsx';
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -53,6 +54,7 @@ const router = createBrowserRouter(
         element={<PrivateRoute component={VerlofRequests} />}
       />
       <Route path="test" element={<PrivateRoute component={Test} />} />
+      <Route path="planning" element={<PrivateRoute component={Planning} />} />
       <Route path="login" element={<Login />} />
     </Route>,
   ),

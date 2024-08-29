@@ -555,10 +555,51 @@ app.delete('/activities/verlof/:personId/:start/:end', async (req, res) => {
   }
 });
 
+app.delete('/activities/planning', async (req, res) => {
+  try {
+    selectedActivities = req.body.shifts;
+    selectedDate = req.body.date;
+    // Step 1: Delete existing shifts for the selected date
+    await models.activities.destroy({
+      where: {
+        date: selectedDate,
+        isWork: true,
+      },
+    });
+
+    // Step 2: Insert the new selected shifts
+    const activitiesToCreate = [];
+
+    for (const [shiftType, doctorIds] of Object.entries(selectedActivities)) {
+      doctorIds.forEach((doctorId) => {
+        activitiesToCreate.push({
+          begin_DT: selectedDate,
+          end_DT: endDate,
+          activity_type: shiftType,
+          person_id: doctorId,
+        });
+      });
+    }
+
+    if (activitiesToCreate.length > 0) {
+      await models.activities.bulkCreate(activitiesToCreate);
+    }
+
+    console.log('Activities updated successfully.');
+  } catch (error) {
+    console.error('Error updating activities:', error);
+  }
+});
+
 // Activity Types
 app.get('/activity_types', async (req, res) => {
   try {
-    const activityTypes = await models.activity_types.findAll();
+    const activityTypes = await models.activity_types.findAll({
+      order: [
+        ['isWork', 'ASC'],
+        ['sortorder', 'ASC'],
+      ],
+    });
     res.json(activityTypes);
   } catch (error) {
     console.error(error);
@@ -755,6 +796,44 @@ app.post('/persons-doctors', async (req, res) => {
     await transactionConst.rollback();
     console.error(error);
     res.status(500).send('Internal Server Error');
+  }
+});
+app.get('/persons-staffmembers', async (req, res) => {
+  try {
+    // Fetch the persons based on the given IDs
+    const persons = await models.persons.findAll({
+      where: {
+        id: {
+          [Op.in]: [
+            'D7FC6FD4-093A-46A6-94D2-520497754145', // Decoster Tanja
+            'C0255E85-86FA-478F-816E-C50C364D367F', // Demaeght Daphnée
+            '6E7431EA-3439-408D-A514-EC9723204771', // Onsia
+            '37CFACDB-DD29-4125-BCD8-4E8F519D433E', // Peeters Bert
+            '234A95AC-713D-4B84-9702-D68D3E6D6E2B', // Poppeliers Lennert
+            '414756FA-F4A9-4908-B8AB-42982697585E', // Smet
+            '2DD622E3-8DC0-4252-82D9-F39B5F93D0C2', // Timmermans Mark
+            '05B2122D-009F-4B8F-B010-2C8E84F2651B', // Van Ing
+            'C1335314-ABDE-47E9-A6E3-1E1D120D7B04', // Verbelen staff
+            'C947B64E-E08D-4B0B-8827-F12C09C2469E', // Van Den Kerckhove Evi
+            'C9E423E0-CE00-4CFA-8DCA-836010BE0EEA', // Van Hoeck: cave pas vanaf april 2024
+            'D722AB12-7D5B-4A12-989B-7DC23046822F', // Hezemans Koen
+          ],
+        },
+      },
+      order: [
+        ['last_name', 'ASC'],
+        ['first_name', 'ASC'],
+      ],
+    });
+
+    // Send the result as a response
+    res.status(200).json(persons);
+  } catch (error) {
+    // Send an error response
+    res.status(500).json({
+      error: 'An error occurred while fetching the persons data.',
+      details: error.message,
+    });
   }
 });
 

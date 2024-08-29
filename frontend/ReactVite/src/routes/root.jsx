@@ -67,6 +67,12 @@ const adminItems = [
     href: '/addProfile',
     initial: 'N',
   },
+  {
+    id: 3,
+    name: 'Planning',
+    href: '/planning',
+    initial: 'P',
+  },
 ];
 
 const currentUser = {

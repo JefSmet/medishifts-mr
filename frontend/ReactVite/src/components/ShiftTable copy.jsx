@@ -10,18 +10,12 @@ function ShiftTable({
   vacations,
   locale,
   shiftTypes,
-  callback,
+  onDaySelect, // Nieuwe prop voor het bijwerken van de geselecteerde dag
 }) {
   const allDays = generateMonthDays(month, year, locale);
 
   if (!shifts || shifts.length === 0) return;
 
-  /**
-   * Reduces activities to a structured object with nested arrays.
-   *
-   * @param {Array} activities - The list of activities to transform.
-   * @return {Object} The transformed activities structured by date and type.
-   */
   function transformActivities(activities) {
     return activities.reduce((accumulator, activity) => {
       const { begin_DT, activity_type, person } = activity;
@@ -77,9 +71,11 @@ function ShiftTable({
     if (isVacation(dateRecord.date)) return 'bg-green-200'; // Vacation
     return '';
   }
+
   function renderPersonsForDate(personsForDate) {
     if (!personsForDate || !Array.isArray(personsForDate)) return null;
     return personsForDate.map(function (person, idx) {
+      if (!person) return;
       const background =
         person.last_name.toLowerCase() === lastName.toLowerCase()
           ? 'bg-yellow-200'
@@ -88,7 +84,6 @@ function ShiftTable({
         person.last_name.toLowerCase() === lastName.toLowerCase()
           ? 'text-gray-500'
           : 'text-white';
-      // return <div className={`py-2 px-4 ${style}`} key={idx}>{person.last_name}</div>;
       return (
         <span
           className={`mr-2 inline-flex h-8 w-8 items-center justify-center rounded-full ${background}`}
@@ -115,23 +110,13 @@ function ShiftTable({
     });
   }
 
-  function handleClick(dateRecord) {
-    const shiftsMap = transformActivities(shifts);
-    const selectedDay = {
-      isoDate: dateRecord.isoDate,
-      caption: dateRecord.caption,
-      activities: shiftsMap[dateRecord.isoDate] || [],
-    };
-    callback(selectedDay);
-  }
-
   function renderRows() {
     return allDays.map(function (dateRecord, index) {
       return (
         <tr
           key={index}
-          className="cursor-pointer text-center"
-          onClick={() => handleClick(dateRecord)}
+          className="cursor-pointer text-center hover:bg-gray-200" // Voeg styling toe voor hover effect
+          onClick={() => onDaySelect(dateRecord.date)} // Update de geselecteerde dag
         >
           <td
             className={`border px-4 py-2 ${getDayColor(
