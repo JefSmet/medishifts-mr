@@ -101,7 +101,9 @@ const ShiftManager = () => {
           shiftTypes={shiftTypes}
           callback={selectedDaySetter}
         />
-        <ShiftDetail selectedDay={selectedDay} shiftTypes={shiftTypes} />
+        <div className="ml-auto mr-auto">
+          <ShiftDetail selectedDay={selectedDay} shiftTypes={shiftTypes} />
+        </div>
       </div>
     </div>
   );

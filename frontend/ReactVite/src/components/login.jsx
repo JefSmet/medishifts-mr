@@ -28,7 +28,7 @@ export default function Login() {
         setAuthToken(token);
 
         // Navigeren naar een andere pagina of scherm na succesvolle login
-        window.location.href = '/dashboard'; // Voor web: navigeer naar dashboard
+        window.location.href = '/werkrooster'; // Voor web: navigeer naar dashboard
       }
     } catch (error) {
       console.error(error.message);

@@ -36,11 +36,6 @@ const router = createBrowserRouter(
         element={<PrivateRoute component={Werkrooster} />}
       />
       <Route
-        path="dashboard/"
-        element={<PrivateRoute component={Dashboard} />}
-        action={createPersonAction}
-      />
-      <Route
         path="addProfile/"
         element={<PrivateRoute component={AddProfile} />}
       />

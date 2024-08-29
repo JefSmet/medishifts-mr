@@ -21,14 +21,17 @@ import {
 } from '../icons/index.js';
 import classNames from '../utils/tailwindUtils.js';
 import { getToken, parseJwt } from '../utils/tokenStorage.js';
+import { CogIcon } from '@heroicons/react/20/solid';
+let currentUser = '';
+let decryptedToken = '';
+if (localStorage.getItem('jwtToken') != null) {
+  decryptedToken = parseJwt(getToken());
+  currentUser = {
+    name: decryptedToken.firstName + ' ' + decryptedToken.lastName,
+  };
+}
 
 const navigationItems = [
-  {
-    name: 'Dashboard',
-    href: '/dashboard',
-    icon: HomeIcon,
-    id: 'dashboard',
-  },
   {
     name: 'Werkrooster',
     href: '/werkrooster',
@@ -42,46 +45,34 @@ const navigationItems = [
     id: 'verlofAanvragen',
   },
   {
-    name: 'TEST',
-    href: '/test',
-    icon: CalendarTravel,
-    id: 'TEST',
-  },
-  {
     name: 'Settings',
     href: '/settings',
-    icon: ChartPieIcon,
+    icon: CogIcon,
     id: 'settings',
   },
 ];
-
-const adminItems = [
-  {
-    id: 1,
-    name: 'Verlof aanvragen bekijken',
-    href: '/verlofRequests',
-    initial: 'V',
-  },
-  {
-    id: 2,
-    name: 'Nieuwe gebruiker aanmaken',
-    href: '/addProfile',
-    initial: 'N',
-  },
-  {
-    id: 3,
-    name: 'Planning',
-    href: '/planning',
-    initial: 'P',
-  },
-];
-let currentUser = '';
-if (localStorage.getItem('jwtToken') != null) {
-  const decryptedToken = parseJwt(getToken());
-  currentUser = {
-    name: decryptedToken.firstName + ' ' + decryptedToken.lastName,
-    // imageSource: '/images/565_Smet_Filip_F_sm.jpg',
-  };
+let adminItems = [];
+if (decryptedToken.role === 'admin') {
+  adminItems = [
+    {
+      id: 1,
+      name: 'Verlof aanvragen bekijken',
+      href: '/verlofRequests',
+      initial: 'V',
+    },
+    {
+      id: 2,
+      name: 'Nieuwe gebruiker aanmaken',
+      href: '/addProfile',
+      initial: 'N',
+    },
+    {
+      id: 3,
+      name: 'Planning',
+      href: '/planning',
+      initial: 'P',
+    },
+  ];
 }
 export default function Root() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
@@ -170,9 +161,11 @@ export default function Root() {
                       </ul>
                     </li>
                     <li>
-                      <div className="text-xs font-semibold leading-6 text-gray-400">
-                        Admin
-                      </div>
+                      {decryptedToken.role === 'admin' && (
+                        <div className="text-xs font-semibold leading-6 text-gray-400">
+                          Admin
+                        </div>
+                      )}
                       <ul role="list" className="-mx-2 mt-2 space-y-1">
                         {adminItems.map((team) => (
                           <li key={team.id}>
@@ -262,9 +255,11 @@ export default function Root() {
                   </ul>
                 </li>
                 <li>
-                  <div className="text-xs font-semibold leading-6 text-gray-400">
-                    Admin
-                  </div>
+                  {decryptedToken.role === 'admin' && (
+                    <div className="text-xs font-semibold leading-6 text-gray-400">
+                      Admin
+                    </div>
+                  )}
                   <ul role="list" className="-mx-2 mt-2 space-y-1">
                     {adminItems.map((team) => (
                       <li key={team.id}>
