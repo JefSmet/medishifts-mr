@@ -27,6 +27,8 @@ import Test from './routes/test.jsx';
 import Dashboard from './components/dashboard.jsx';
 import PrivateRoute from './components/privateRoute.jsx';
 import Planning from './routes/planning.jsx';
+import CreateUserRole from './components/createUserRole.jsx';
+import CreateShiftTypes from './components/createShiftTypes.jsx';
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -38,6 +40,14 @@ const router = createBrowserRouter(
       <Route
         path="addProfile/"
         element={<PrivateRoute component={AddProfile} />}
+      />
+      <Route
+        path="roles/"
+        element={<PrivateRoute component={CreateUserRole} />}
+      />
+      <Route
+        path="activityTypes/"
+        element={<PrivateRoute component={CreateShiftTypes} />}
       />
       <Route path="settings/" element={<PrivateRoute component={Settings} />} />
       <Route

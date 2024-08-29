@@ -62,17 +62,36 @@ if (decryptedToken.role === 'admin') {
     },
     {
       id: 2,
+      name: 'Planning',
+      href: '/planning',
+      initial: 'P',
+    },
+    {
+      id: 3,
       name: 'Nieuwe gebruiker aanmaken',
       href: '/addProfile',
       initial: 'N',
     },
     {
-      id: 3,
-      name: 'Planning',
-      href: '/planning',
-      initial: 'P',
+      id: 4,
+      name: 'Rollen',
+      href: '/roles',
+      initial: 'R',
+    },
+    {
+      id: 5,
+      name: 'Shift types',
+      href: '/activityTypes',
+      initial: 'S',
     },
   ];
+}
+
+function handleLogout() {
+  localStorage.removeItem('user');
+  decryptedToken = '';
+  currentUser = '';
+  window.location.href = '/login';
 }
 export default function Root() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
@@ -295,7 +314,12 @@ export default function Root() {
                   </ul>
                 </li>
                 <li className="-mx-6 mt-auto">
-                  {currentUser && <Avatar fullName={currentUser.name} />}
+                  {currentUser && (
+                    <Avatar
+                      fullName={currentUser.name}
+                      handleLogout={handleLogout}
+                    />
+                  )}
                 </li>
               </ul>
             </nav>
@@ -315,7 +339,9 @@ export default function Root() {
             {navigationItems.find((nav) => location.pathname === nav.href)
               ?.name || ''}
           </div>
-          {currentUser && <Avatar fullName={currentUser.name} />}
+          {currentUser && (
+            <Avatar fullName={currentUser.name} handleLogout={handleLogout} />
+          )}
         </div>
 
         <main className="lg:pl-72">

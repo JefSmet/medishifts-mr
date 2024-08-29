@@ -7,7 +7,7 @@ export default function ShiftDetail({ selectedDay, shiftTypes }) {
 
   useEffect(() => {
     axios
-      .get(`${import.meta.env.VITE_API_ROUTE}persons`)
+      .get(`${import.meta.env.VITE_API_ROUTE}persons-staffmembers`)
       .then((response) => {
         console.log(response.data);
         setPersons(response.data);

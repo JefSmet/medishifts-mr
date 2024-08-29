@@ -1,3 +1,6 @@
+import { useState, useEffect } from 'react';
+import axios from 'axios';
+
 const requests = [
   { name: 'Lindsay Walton', startDate: '2024-08-01', endDate: '2024-08-15' },
   { name: 'Courtney Henry', startDate: '2024-09-10', endDate: '2024-09-20' },
@@ -8,6 +11,46 @@ const requests = [
 ];
 
 export default function VerlofRequestsOverview() {
+  const [requests, setRequests] = useState([]);
+
+  useEffect(() => {
+    axios
+      .get(import.meta.env.VITE_API_ROUTE + 'verlofAanvragen')
+      .then((response) => {
+        setRequests(response.data);
+      })
+      .catch((error) => {
+        console.error('Error fetching verlof requests:', error);
+      });
+  }, []);
+  async function handleAfkeuren(requestId) {
+    try {
+      await axios.put(
+        import.meta.env.VITE_API_ROUTE + 'activities/' + requestId,
+        {
+          status: 'DENIED',
+        },
+      );
+      setRequests(requests.filter((request) => request.id !== requestId));
+    } catch (err) {
+      setError('Er is een fout opgetreden bij het verwijderen van het verlof.');
+      console.error(err);
+    }
+  }
+  async function handleGoedkeuren(requestId) {
+    try {
+      await axios.put(
+        import.meta.env.VITE_API_ROUTE + 'activities/' + requestId,
+        {
+          status: 'OK',
+        },
+      );
+      setRequests(requests.filter((request) => request.id !== requestId));
+    } catch (err) {
+      setError('Er is een fout opgetreden bij het goedkeuren van het verlof.');
+      console.error(err);
+    }
+  }
   return (
     <div className="px-4 sm:px-6 lg:px-8">
       <div className="sm:flex sm:items-center">
@@ -55,21 +98,22 @@ export default function VerlofRequestsOverview() {
               </thead>
               <tbody className="divide-y divide-gray-200">
                 {requests.map((request) => (
-                  <tr key={request.name}>
+                  <tr key={request.id}>
                     <td className="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-0">
-                      {request.name}
+                      {request.person.last_name} {request.person.first_name}
                     </td>
                     <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
-                      {request.startDate}
+                      {new Date(request.begin_DT).toLocaleDateString()}
                     </td>
                     <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
-                      {request.endDate}
+                      {new Date(request.end_DT).toLocaleDateString()}
                     </td>
                     <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
                       <div className="flex space-x-2">
                         <button
                           type="button"
                           className="inline-flex items-center rounded border border-transparent bg-green-600 px-2.5 py-1.5 text-xs font-medium text-white hover:bg-green-500 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2"
+                          onClick={() => handleGoedkeuren(request.id)}
                         >
                           <svg
                             xmlns="http://www.w3.org/2000/svg"
@@ -90,6 +134,7 @@ export default function VerlofRequestsOverview() {
                         <button
                           type="button"
                           className="inline-flex items-center rounded border border-transparent bg-red-600 px-2.5 py-1.5 text-xs font-medium text-white hover:bg-red-500 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2"
+                          onClick={() => handleAfkeuren(request.id)}
                         >
                           <svg
                             xmlns="http://www.w3.org/2000/svg"

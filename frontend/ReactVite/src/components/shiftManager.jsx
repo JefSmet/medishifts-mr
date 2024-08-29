@@ -23,14 +23,9 @@ const ShiftManager = () => {
   );
   const [lastName, setLastName] = useState('');
 
-  function handleMonthChange(month, year) {
-    setMonth(month);
-    setYear(year);
-  }
-
   useEffect(() => {
     const startDate = new Date(year, month - 1, 1); //gets first day of the month
-    const endDate = new Date(year, month, 0); //gets the last day of the month
+    const endDate = new Date(year, month, 1); //gets the first day of the next month
     async function fetchActivities() {
       try {
         const response = await axios.get(
@@ -72,6 +67,37 @@ const ShiftManager = () => {
     fetchActivityTypes();
     setLastName(parseJwt(getToken()).lastName);
   }, []);
+
+  useEffect(() => {
+    const startDate = new Date(year, month - 1, 1); //gets first day of the month
+    const endDate = new Date(year, month, 3); //gets the last day of the month
+    async function fetchActivities() {
+      try {
+        const response = await axios.get(
+          `${import.meta.env.VITE_API_ROUTE}activities/period/${startDate.toISOString().slice(0, 10)}/${endDate.toISOString().slice(0, 10)}/1`,
+        );
+        setActivities(response.data);
+      } catch (error) {
+        console.error('Error fetching activities:', error);
+      }
+    }
+    fetchActivities();
+
+    async function fetchVerlof() {
+      try {
+        const response = await axios.get(
+          `${import.meta.env.VITE_API_ROUTE}activities/period/${startDate.toISOString().slice(0, 10)}/${endDate.toISOString().slice(0, 10)}/0`,
+        );
+        setVerlof(response.data);
+      } catch (error) {
+        console.error('Error fetching verlof:', error);
+      }
+    }
+    fetchVerlof();
+    setHolidays(holidaysBelgium(year));
+    setSchoolHolidays(schoolHolidaysCalendarYear(year));
+    setLastName(parseJwt(getToken()).lastName);
+  }, [month, year]);
 
   function selectedDaySetter(day) {
     setSelectedDay(day);

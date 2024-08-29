@@ -1,82 +1,119 @@
-import { Form, useActionData, redirect } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 
-const apiRoute = import.meta.env.VITE_API_ROUTE + '/user_roles';
+const CreateUserRole = () => {
+  const [roles, setRoles] = useState([]);
+  const [roleName, setRoleName] = useState('');
+  const [error, setError] = useState(null);
+  const [success, setSuccess] = useState(false);
 
-export async function action({ request }) {
-  const formData = await request.formData();
-  const data = {
-    user_id: formData.get('user_id'),
-    role: formData.get('role'),
+  // Haal rollen op bij het laden van de component
+  useEffect(() => {
+    const fetchRoles = async () => {
+      try {
+        const response = await axios.get(
+          import.meta.env.VITE_API_ROUTE + 'user_roles',
+        );
+        setRoles(response.data);
+      } catch (err) {
+        setError('Fout bij het ophalen van rollen.');
+      }
+    };
+
+    fetchRoles();
+  }, []);
+
+  const removeRole = async (roleId) => {
+    try {
+      await axios.delete(
+        import.meta.env.VITE_API_ROUTE + `user_roles/${roleId}`,
+      );
+      setRoles(roles.filter((role) => role.id !== roleId));
+    } catch (err) {
+      setError('Er is een fout opgetreden bij het verwijderen van de rol.');
+      console.error(err);
+    }
   };
 
-  try {
-    const response = await axios.post(apiRoute, data);
-    return redirect('/');
-  } catch (error) {
-    console.error(error);
-    return { error: error.message };
-  }
-}
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setError(null);
+    setSuccess(false);
 
-export default function CreateUserRole() {
+    // Valideer de invoer
+    if (!roleName) {
+      setError('Rolnaam is vereist.');
+      return;
+    }
+
+    try {
+      const response = await axios.post(
+        import.meta.env.VITE_API_ROUTE + 'user_roles',
+        {
+          role: roleName,
+        },
+      );
+
+      if (response.status === 201) {
+        setSuccess(true);
+        setRoleName('');
+        setRoles([...roles, response.data]);
+      }
+    } catch (err) {
+      setError('Er is een fout opgetreden bij het aanmaken van de rol.');
+      console.error(err);
+    }
+  };
+
   return (
-    <Form method="post">
-      <div className="space-y-12 sm:space-y-16">
-        <div>
-          <h2 className="text-base font-semibold leading-7 text-gray-900">
-            Gebruikersrol informatie
-          </h2>
-          <p className="mt-1 max-w-2xl text-sm leading-6 text-gray-600">
-            Vul hier de gegevens van de gebruikersrol in.
-          </p>
-
-          <div className="mt-10 space-y-8 border-b border-gray-900/10 pb-12 sm:space-y-0 sm:divide-y sm:divide-gray-900/10 sm:border-t sm:pb-0">
-            <div className="sm:grid sm:grid-cols-3 sm:items-start sm:gap-4 sm:py-6">
-              <label
-                htmlFor="user_id"
-                className="block text-sm font-medium leading-6 text-gray-900 sm:pt-1.5"
-              >
-                Gebruiker ID
-              </label>
-              <div className="mt-2 sm:col-span-2 sm:mt-0">
-                <input
-                  id="user_id"
-                  name="user_id"
-                  type="text"
-                  className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:max-w-xs sm:text-sm sm:leading-6"
-                />
-              </div>
-            </div>
-
-            <div className="sm:grid sm:grid-cols-3 sm:items-start sm:gap-4 sm:py-6">
-              <label
-                htmlFor="role"
-                className="block text-sm font-medium leading-6 text-gray-900 sm:pt-1.5"
-              >
-                Rol
-              </label>
-              <div className="mt-2 sm:col-span-2 sm:mt-0">
-                <input
-                  id="role"
-                  name="role"
-                  type="text"
-                  className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:max-w-xs sm:text-sm sm:leading-6"
-                />
-              </div>
-            </div>
-          </div>
+    <div className="mx-auto mt-8 max-w-md rounded border p-4">
+      <h2 className="mb-4 text-xl font-bold">Gebruikersrol Aanmaken</h2>
+      {error && <div className="mb-4 text-red-500">{error}</div>}
+      {success && (
+        <div className="mb-4 text-green-500">
+          Gebruikersrol succesvol aangemaakt!
         </div>
-      </div>
-
-      <div className="mt-6 flex items-center justify-end gap-x-6">
+      )}
+      <form onSubmit={handleSubmit}>
+        <div className="mb-4">
+          <label htmlFor="roleName" className="block text-gray-700">
+            Rolnaam:
+          </label>
+          <input
+            type="text"
+            id="roleName"
+            value={roleName}
+            onChange={(e) => setRoleName(e.target.value)}
+            className="w-full rounded border px-3 py-2"
+            required
+          />
+        </div>
         <button
           type="submit"
-          className="inline-flex justify-center rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+          className="w-full rounded bg-blue-500 py-2 text-white"
         >
-          Opslaan
+          Aanmaken
         </button>
+      </form>
+      <div className="mt-8">
+        <h3 className="text-lg font-semibold">Bestaande Rollen</h3>
+        <ul>
+          {roles.map((role) => (
+            <li key={role.id} className="mt-2 flex items-center">
+              {role.role}
+              <button
+                type="button"
+                className="ml-4 text-red-500 hover:text-red-700"
+                onClick={() => removeRole(role.id)}
+              >
+                Verwijderen
+              </button>
+            </li>
+          ))}
+        </ul>
       </div>
-    </Form>
+    </div>
   );
-}
+};
+
+export default CreateUserRole;

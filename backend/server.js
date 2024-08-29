@@ -458,14 +458,12 @@ app.get('/activities/period/:start/:end/:isWork/', async (req, res) => {
     // Converteer isWork naar een boolean
     const isWorkBoolean = isWork === 'true';
 
-    const startDate = new Date(start - 1, 1);
-    const endDate = new Date(end, 0);
-    endDate.setHours(23, 59, 59, 999); // Zorg ervoor dat de einddatum correct is ingesteld
+    //  59, 59, 999); // Zorg ervoor dat de einddatum correct is ingesteld
 
     const activities = await models.activities.findAll({
       where: {
         begin_DT: { [Op.gte]: start },
-        end_DT: { [Op.lte]: end },
+        end_DT: { [Op.lt]: end },
       },
       include: [
         { model: models.persons, attributes: ['first_name', 'last_name'] },
@@ -498,6 +496,37 @@ app.get('/activities/:id', async (req, res) => {
     } else {
       res.status(404).send('Activity not found');
     }
+  } catch (error) {
+    console.error(error);
+    res.status(500).send('Internal Server Error');
+  }
+});
+
+app.get('/verlofAanvragen', async (req, res) => {
+  try {
+    const verlofAanvragen = await models.activities.findAll({
+      where: {
+        status: 'AV',
+      },
+      include: [
+        {
+          model: models.persons,
+          attributes: ['last_name', 'first_name'],
+        },
+        {
+          model: models.activity_types,
+          attributes: ['name'],
+          where: { isWork: 0 },
+        },
+      ],
+      order: [
+        [models.persons, 'last_name', 'ASC'],
+        [models.persons, 'first_name', 'ASC'],
+        ['begin_DT', 'ASC'],
+      ],
+    });
+
+    res.json(verlofAanvragen);
   } catch (error) {
     console.error(error);
     res.status(500).send('Internal Server Error');
@@ -649,7 +678,7 @@ app.put('/activity_types/:id', async (req, res) => {
 app.delete('/activity_types/:id', async (req, res) => {
   try {
     await models.activity_types.destroy({
-      where: { activity_type_id: req.params.id },
+      where: { id: req.params.id },
     });
     res.status(204).send('Activity type deleted');
   } catch (error) {
@@ -668,6 +697,45 @@ app.get('/users', async (req, res) => {
     res.status(500).send('Internal Server Error');
   }
 });
+
+app.get('/users-profiles', async (req, res) => {
+  try {
+    const doctorDetails = await models.persons.findAll({
+      attributes: ['id', 'last_name', 'first_name', 'date_of_birth'],
+      include: [
+        {
+          model: models.users,
+          attributes: ['person_id', 'user_name'],
+          include: [
+            {
+              model: models.user_roles,
+              attributes: ['id', 'role'],
+            },
+          ],
+          required: true,
+        },
+        {
+          model: models.doctors,
+          attributes: [
+            'id',
+            'riziv_PK',
+            'qualification_code',
+            'qualification_name',
+          ],
+        },
+      ],
+    });
+
+    res.json(doctorDetails);
+  } catch (error) {
+    console.error('Error fetching doctor details:', error);
+    res
+      .status(500)
+      .json({ error: 'An error occurred while fetching doctor details.' });
+  }
+});
+
+// app.post('users-profiles', async (req, res) => {});
 
 app.get('/users/:id', async (req, res) => {
   try {
@@ -697,6 +765,12 @@ app.put('/users/:id', async (req, res) => {
   try {
     const user = await models.users.findByPk(req.params.id);
     if (user) {
+      if (req.body.password) {
+        req.body.password = crypto
+          .createHash('sha256')
+          .update(req.body.password)
+          .digest('hex');
+      }
       await user.update(req.body);
       res.json(user);
     } else {

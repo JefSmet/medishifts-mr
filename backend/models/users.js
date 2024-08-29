@@ -51,16 +51,12 @@ export default class users extends Model {
         ],
         hooks: {
           beforeCreate: (user) => {
-            user.password = crypto
-              .createHash('sha256')
-              .update(user.password)
-              .digest('hex');
-          },
-          beforeUpdate: (user) => {
-            user.password = crypto
-              .createHash('sha256')
-              .update(user.password)
-              .digest('hex');
+            if (user.password) {
+              user.password = crypto
+                .createHash('sha256')
+                .update(user.password)
+                .digest('hex');
+            }
           },
         },
       }
