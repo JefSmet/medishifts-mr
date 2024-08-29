@@ -163,7 +163,7 @@ app.post('/login', async (req, res) => {
         });
       });
     } else {
-      return res.status(400).json({ passwordincorrect: 'Password incorrect' });
+      return res.status(401).json({ passwordincorrect: 'Password incorrect' });
     }
   } catch (err) {
     res.status(500).json({ error: err.message });
