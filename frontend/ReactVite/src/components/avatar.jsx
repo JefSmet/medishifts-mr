@@ -1,23 +1,3 @@
-// import React from 'react';
-
-// const Avatar = ({ fullName, imageSource, onClick }) => {
-//   return (
-//     <div
-//       className="flex cursor-pointer items-center gap-x-4 px-6 py-3 text-sm font-semibold leading-6 text-gray-900 hover:bg-gray-50"
-//       onClick={onClick}
-//     >
-//       <img
-//         alt={fullName}
-//         src={imageSource}
-//         className="inline-block h-8 w-8 rounded-full"
-//       />
-//       <span className="sr-only">Uw profiel</span>
-//       <span aria-hidden="true">{fullName}</span>
-//     </div>
-//   );
-// };
-
-// export default Avatar;
 import { Menu, MenuButton, MenuItem, MenuItems } from '@headlessui/react';
 import { ChevronDownIcon } from '@heroicons/react/20/solid';
 import React, { useEffect, useRef, useState } from 'react';
@@ -57,11 +37,6 @@ const Avatar = ({ fullName, imageSource }) => {
     <Menu as="div" className="relative inline-block text-left" ref={menuRef}>
       <div>
         <MenuButton className="flex cursor-pointer items-center gap-x-4 px-6 py-3 text-sm font-semibold leading-6 text-gray-900 hover:bg-gray-50">
-          <img
-            alt={fullName}
-            src={imageSource}
-            className="inline-block h-8 w-8 rounded-full"
-          />
           <span className="sr-only">Uw profiel</span>
           <span aria-hidden="true">{fullName}</span>
           <ChevronDownIcon

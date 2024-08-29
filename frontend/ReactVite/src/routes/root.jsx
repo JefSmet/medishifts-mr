@@ -20,6 +20,7 @@ import {
   LogoMonica,
 } from '../icons/index.js';
 import classNames from '../utils/tailwindUtils.js';
+import { getToken, parseJwt } from '../utils/tokenStorage.js';
 
 const navigationItems = [
   {
@@ -74,12 +75,14 @@ const adminItems = [
     initial: 'P',
   },
 ];
-
-const currentUser = {
-  name: 'Filip Smet',
-  imageSource: '/images/565_Smet_Filip_F_sm.jpg',
-};
-
+let currentUser = '';
+if (localStorage.getItem('jwtToken') != null) {
+  const decryptedToken = parseJwt(getToken());
+  currentUser = {
+    name: decryptedToken.firstName + ' ' + decryptedToken.lastName,
+    // imageSource: '/images/565_Smet_Filip_F_sm.jpg',
+  };
+}
 export default function Root() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const location = useLocation();
@@ -289,10 +292,7 @@ export default function Root() {
                   </ul>
                 </li>
                 <li className="-mx-6 mt-auto">
-                  <Avatar
-                    fullName={currentUser.name}
-                    imageSource={currentUser.imageSource}
-                  />
+                  {currentUser && <Avatar fullName={currentUser.name} />}
                 </li>
               </ul>
             </nav>
@@ -312,10 +312,7 @@ export default function Root() {
             {navigationItems.find((nav) => location.pathname === nav.href)
               ?.name || ''}
           </div>
-          <Avatar
-            fullName={currentUser.name}
-            imageSource={currentUser.imageSource}
-          />
+          {currentUser && <Avatar fullName={currentUser.name} />}
         </div>
 
         <main className="lg:pl-72">
