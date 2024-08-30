@@ -24,12 +24,23 @@ function ShiftTable({
    */
   function transformActivities(activities) {
     return activities.reduce((accumulator, activity) => {
-      const { begin_DT, activity_type, person } = activity;
+      const {
+        begin_DT,
+        end_DT,
+        activity_type,
+        person,
+        person_id,
+        activity_type_id,
+      } = activity;
       const beginDate = toDateOnlyString(begin_DT);
       const activityTypeName = activity_type.name;
       const personName = {
         last_name: person.last_name,
         first_name: person.first_name,
+        id: person_id,
+        beginDT: begin_DT,
+        endDT: end_DT,
+        activityTypeId: activity_type_id,
       };
 
       if (!accumulator[beginDate]) {

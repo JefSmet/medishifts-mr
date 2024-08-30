@@ -1,7 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 
-export default function ShiftDetail({ selectedDay, shiftTypes }) {
+export default function ShiftDetail({
+  selectedDay,
+  shiftTypes,
+  activities,
+  updateActivities,
+}) {
   const [persons, setPersons] = useState([]);
   const [newActivities, setNewActivities] = useState([]);
 
@@ -9,7 +14,6 @@ export default function ShiftDetail({ selectedDay, shiftTypes }) {
     axios
       .get(`${import.meta.env.VITE_API_ROUTE}persons-staffmembers`)
       .then((response) => {
-        console.log(response.data);
         setPersons(response.data);
       })
       .catch((error) => {
@@ -18,8 +22,8 @@ export default function ShiftDetail({ selectedDay, shiftTypes }) {
   }, []);
 
   useEffect(() => {
-    // Initialize newActivities with selectedDay activities
     if (!selectedDay.activities) return;
+
     const activitiesCopy = shiftTypes.map((type) => ({
       isoDate: selectedDay.isoDate,
       caption: selectedDay.caption,
@@ -54,12 +58,10 @@ export default function ShiftDetail({ selectedDay, shiftTypes }) {
               : type,
           ),
         );
-        console.log(
-          `Verander activiteit naar dokter  ${selectedPerson.last_name} ${selectedPerson.first_name}`,
-        );
       }
     }
   }
+
   async function handleSave() {
     const filteredActivities = newActivities.map((activityGroup) => ({
       ...activityGroup,
@@ -77,17 +79,44 @@ export default function ShiftDetail({ selectedDay, shiftTypes }) {
       isoDate: selectedDay.isoDate,
     };
 
-    console.log('Data to save:', dataToSave);
+    try {
+      await axios.delete(
+        `${import.meta.env.VITE_API_ROUTE}activities/day/${selectedDay.isoDate}`,
+      );
 
-    // try {
-    //   const response = await axios.post(`${import.meta.env.VITE_API_ROUTE}activities`, dataToSave);
-    //   console.log('Activities saved successfully:', response.data);
-    //   alert('Activities saved successfully!');
-    // } catch (error) {
-    //   console.error('Error saving activities:', error);
-    //   alert('Error saving activities');
-    // }
+      for (const [shiftType, activities] of Object.entries(
+        dataToSave.activities,
+      )) {
+        for (const activity of activities) {
+          await axios.post(`${import.meta.env.VITE_API_ROUTE}activities`, {
+            person_id: activity.id,
+            begin_DT: activity.beginDT,
+            end_DT: activity.endDT,
+            activity_type_id: activity.activityTypeId,
+            status: 'OK',
+          });
+        }
+      }
+
+      const { year, month } = selectedDay.isoDate.split('-').reduce(
+        (acc, value, index) => {
+          acc[index === 0 ? 'year' : index === 1 ? 'month' : 'day'] = value;
+          return acc;
+        },
+        { year: null, month: null, day: null },
+      );
+      const startDate = new Date(year, month - 1, 1);
+      const endDate = new Date(year, month, 1);
+
+      const response = await axios.get(
+        `${import.meta.env.VITE_API_ROUTE}activities/period/${startDate.toISOString().slice(0, 10)}/${endDate.toISOString().slice(0, 10)}/1`,
+      );
+      updateActivities(response.data);
+    } catch (error) {
+      console.error('Error saving activities:', error);
+    }
   }
+
   function handleAddPerson(activityType) {
     setNewActivities((prevActivities) =>
       prevActivities.map((type) =>
@@ -103,6 +132,7 @@ export default function ShiftDetail({ selectedDay, shiftTypes }) {
       ),
     );
   }
+
   function handleRemovePerson(activityType, activityIndex) {
     setNewActivities((prevActivities) =>
       prevActivities.map((type) =>
@@ -117,7 +147,9 @@ export default function ShiftDetail({ selectedDay, shiftTypes }) {
       ),
     );
   }
+
   if (!selectedDay.activities) return null;
+
   return (
     <div className="mx-auto w-full max-w-xl rounded-lg bg-gray-100 p-6 shadow-md">
       <h2 className="mb-4 text-2xl font-semibold text-gray-800">

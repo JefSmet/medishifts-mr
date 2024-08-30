@@ -101,10 +101,12 @@ const ShiftManager = () => {
 
   function selectedDaySetter(day) {
     setSelectedDay(day);
-    console.log('selectedDaySetter: ', day);
-    // console.log(day);
+    console.log(day);
   }
 
+  function updateActivities(newActivities) {
+    setActivities(newActivities);
+  }
   return (
     <div>
       <MonthYearSelector
@@ -128,7 +130,12 @@ const ShiftManager = () => {
           callback={selectedDaySetter}
         />
         <div className="ml-auto mr-auto">
-          <ShiftDetail selectedDay={selectedDay} shiftTypes={shiftTypes} />
+          <ShiftDetail
+            selectedDay={selectedDay}
+            shiftTypes={shiftTypes}
+            updateActivities={updateActivities}
+            activities={activities}
+          />
         </div>
       </div>
     </div>

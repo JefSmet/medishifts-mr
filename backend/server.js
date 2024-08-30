@@ -567,6 +567,26 @@ app.delete('/activities/:id', async (req, res) => {
     res.status(500).send('Internal Server Error');
   }
 });
+
+app.delete('/activities/day/:date', async (req, res) => {
+  try {
+    await models.activities.destroy({
+      where: {
+        begin_DT: {
+          [Op.gte]: req.params.date,
+          [Op.lt]: new Date(req.params.date).setDate(
+            new Date(req.params.date).getDate() + 1
+          ),
+        },
+      },
+    });
+    res.status(204).send('Activities deleted');
+  } catch (error) {
+    console.error(error);
+    res.status(500).send('Internal Server Error');
+  }
+});
+
 app.delete('/activities/verlof/:personId/:start/:end', async (req, res) => {
   try {
     await models.activities.destroy({
